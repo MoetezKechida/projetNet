@@ -1,4 +1,4 @@
-namespace projetNet.Services;
+namespace projetNet.Services.ServiceContracts;
 
 public interface IAuditLogService
 {

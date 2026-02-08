@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using projetNet.Data;
 using projetNet.Models;
+using projetNet.Repositories.RepositoryContracts;
 
-namespace projetNet.Repositories;
+namespace projetNet.Repositories.Repositories;
 
 public interface IOfferRepository : IRepository<Offer>
 {

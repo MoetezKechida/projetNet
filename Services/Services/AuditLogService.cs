@@ -1,6 +1,8 @@
 using projetNet.Repositories;
+using projetNet.Repositories.Repositories;
+using projetNet.Services.ServiceContracts;
 
-namespace projetNet.Services;
+namespace projetNet.Services.Services;
 
 public class AuditLogService : IAuditLogService
 {

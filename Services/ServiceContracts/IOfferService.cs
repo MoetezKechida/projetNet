@@ -1,6 +1,6 @@
 using projetNet.Models;
 
-namespace projetNet.Services;
+namespace projetNet.Services.ServiceContracts;
 
 public interface IOfferService
 {

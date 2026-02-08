@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using projetNet.Models;
 using projetNet.Services;
+using projetNet.Services.ServiceContracts;
 
 namespace projetNet.Controllers;
 
@@ -9,10 +11,11 @@ namespace projetNet.Controllers;
 public class VehiclesController : ControllerBase
 {
     private readonly IVehicleService _vehicleService;
-
-    public VehiclesController(IVehicleService vehicleService)
+    private readonly UserManager<ApplicationUser> _userManager;
+    public VehiclesController(IVehicleService vehicleService, UserManager<ApplicationUser> userManager)
     {
         _vehicleService = vehicleService;
+        _userManager = userManager;
     }
 
     [HttpGet]
@@ -34,9 +37,10 @@ public class VehiclesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Vehicle vehicle)
     {
+        var ownerId = _userManager.GetUserId(User);
         try
         {
-            var created = await _vehicleService.CreateAsync(vehicle);
+            var created = await _vehicleService.CreateAsync(vehicle , ownerId);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
         catch (Exception ex)

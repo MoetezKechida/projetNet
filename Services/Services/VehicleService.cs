@@ -1,17 +1,22 @@
+using Microsoft.AspNetCore.Identity;
 using projetNet.Models;
 using projetNet.Repositories;
+using projetNet.Repositories.Repositories;
+using projetNet.Services.ServiceContracts;
 
-namespace projetNet.Services;
+namespace projetNet.Services.Services;
 
 public class VehicleService : IVehicleService
 {
     private readonly IVehicleRepository _vehicleRepository;
     private readonly IAuditLogRepository _auditLogRepository;
+    
 
-    public VehicleService(IVehicleRepository vehicleRepository, IAuditLogRepository auditLogRepository)
+    public VehicleService(IVehicleRepository vehicleRepository, IAuditLogRepository auditLogRepository,  UserManager<ApplicationUser> userManager)
     {
         _vehicleRepository = vehicleRepository;
         _auditLogRepository = auditLogRepository;
+        
     }
 
     public async Task<Vehicle?> GetByIdAsync(Guid id)
@@ -39,7 +44,7 @@ public class VehicleService : IVehicleService
         return await _vehicleRepository.SearchAsync(brand, minYear, maxYear);
     }
 
-    public async Task<Vehicle> CreateAsync(Vehicle vehicle)
+    public async Task<Vehicle> CreateAsync(Vehicle vehicle, string ownerId)
     {
         // Check if VIN already exists
         var existingVehicle = await _vehicleRepository.GetByVinAsync(vehicle.Vin);
@@ -47,7 +52,7 @@ public class VehicleService : IVehicleService
         {
             throw new InvalidOperationException($"Vehicle with VIN {vehicle.Vin} already exists.");
         }
-
+        vehicle.OwnerId = ownerId;
         var result = await _vehicleRepository.AddAsync(vehicle);
 
         // Log the action

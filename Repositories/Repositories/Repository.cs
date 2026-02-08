@@ -1,8 +1,9 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using projetNet.Data;
+using projetNet.Repositories.RepositoryContracts;
 
-namespace projetNet.Repositories;
+namespace projetNet.Repositories.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {
