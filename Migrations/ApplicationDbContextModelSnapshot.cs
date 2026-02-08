@@ -68,7 +68,7 @@ namespace projetNet.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-<<<<<<< Updated upstream:Data/Migrations/ApplicationDbContextModelSnapshot.cs
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
@@ -133,8 +133,7 @@ namespace projetNet.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-=======
->>>>>>> Stashed changes:Migrations/ApplicationDbContextModelSnapshot.cs
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")

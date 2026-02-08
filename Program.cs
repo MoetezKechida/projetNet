@@ -7,7 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using projetNet.Data;
 using projetNet.Repositories;
+using projetNet.Repositories.Repositories;
 using projetNet.Services;
+using projetNet.Services.ServiceContracts;
+using projetNet.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

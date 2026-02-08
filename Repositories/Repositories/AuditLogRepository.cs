@@ -1,7 +1,8 @@
 using MongoDB.Driver;
 using projetNet.Data;
+using projetNet.Repositories.RepositoryContracts;
 
-namespace projetNet.Repositories;
+namespace projetNet.Repositories.Repositories;
 
 public interface IAuditLogRepository : IMongoRepository<AuditLog>
 {

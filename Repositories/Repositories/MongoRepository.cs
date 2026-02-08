@@ -1,8 +1,9 @@
 using System.Linq.Expressions;
 using MongoDB.Driver;
 using projetNet.Data;
+using projetNet.Repositories.RepositoryContracts;
 
-namespace projetNet.Repositories;
+namespace projetNet.Repositories.Repositories;
 
 public class MongoRepository<T> : IMongoRepository<T> where T : class
 {

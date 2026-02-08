@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace projetNet.Repositories;
+namespace projetNet.Repositories.RepositoryContracts;
 
 public interface IMongoRepository<T> where T : class
 {
