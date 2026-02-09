@@ -1,8 +1,3 @@
-<<<<<<< Updated upstream
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using projetNet.Data;
-=======
 using System;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,21 +11,23 @@ using Microsoft.IdentityModel.Tokens;
 using projetNet.Data;
 using projetNet.Middleware;
 using projetNet.Models;
->>>>>>> Stashed changes
+
 using projetNet.Repositories;
+using projetNet.Repositories.Repositories;
 using projetNet.Services;
+using projetNet.Services.ServiceContracts;
+using projetNet.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-<<<<<<< Updated upstream
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-=======
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true);
+
 // Configure Identity
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
 {
@@ -42,7 +39,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.Password.RequireLowercase = true;
 })
     .AddRoles<IdentityRole>()
->>>>>>> Stashed changes
+
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Configure JWT Authentication

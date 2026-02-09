@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using projetNet.Services;
+using projetNet.Services.ServiceContracts;
 
 namespace projetNet.Controllers;
 
