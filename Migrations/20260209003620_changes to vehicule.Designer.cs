@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projetNet.Data;
 
@@ -10,9 +11,11 @@ using projetNet.Data;
 namespace projetNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260209003620_changes to vehicule")]
+    partial class changestovehicule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,50 +357,6 @@ namespace projetNet.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Vehicles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("1dab3518-8416-484f-90a1-9ba31938b639"),
-                            Brand = "Toyota",
-                            Description = "Reliable sedan, low mileage.",
-                            ImageUrl = "/images/cars/toyota_corolla.jpg",
-                            Location = "Paris",
-                            Mileage = 12000,
-                            Model = "Corolla",
-                            OwnerId = "owner1",
-                            Price = 15000m,
-                            Vin = "VIN1234567890",
-                            Year = 2022
-                        },
-                        new
-                        {
-                            Id = new Guid("9e199fbc-e7a0-45a0-97e8-e18837e08722"),
-                            Brand = "BMW",
-                            Description = "Luxury SUV, fully loaded.",
-                            ImageUrl = "/images/cars/bmw_x5.jpg",
-                            Location = "Lyon",
-                            Mileage = 8000,
-                            Model = "X5",
-                            OwnerId = "owner2",
-                            Price = 35000m,
-                            Vin = "VIN0987654321",
-                            Year = 2021
-                        },
-                        new
-                        {
-                            Id = new Guid("8478f339-439f-4315-904e-6efdba3cdb7d"),
-                            Brand = "Renault",
-                            Description = "Compact city car, economical.",
-                            ImageUrl = "/images/cars/renault_clio.jpg",
-                            Location = "Marseille",
-                            Mileage = 20000,
-                            Model = "Clio",
-                            OwnerId = "owner3",
-                            Price = 9000m,
-                            Vin = "VIN1122334455",
-                            Year = 2020
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
