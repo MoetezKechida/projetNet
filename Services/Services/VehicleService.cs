@@ -52,6 +52,8 @@ public class VehicleService : IVehicleService
         {
             throw new InvalidOperationException($"Vehicle with VIN {vehicle.Vin} already exists.");
         }
+
+        vehicle.Status = "pending";
         vehicle.OwnerId = ownerId;
         var result = await _vehicleRepository.AddAsync(vehicle);
 

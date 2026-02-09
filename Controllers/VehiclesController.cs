@@ -12,6 +12,7 @@ public class VehiclesController : ControllerBase
 {
     private readonly IVehicleService _vehicleService;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IImageService _imageService;
     public VehiclesController(IVehicleService vehicleService, UserManager<ApplicationUser> userManager)
     {
         _vehicleService = vehicleService;

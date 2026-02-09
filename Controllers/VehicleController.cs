@@ -19,12 +19,15 @@ namespace projetNet.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IVehicleService _vehicleService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IImageService _imageService;
 
-        public VehicleController(ApplicationDbContext context,  IVehicleService vehicleService, UserManager<ApplicationUser> userManager)
+        public VehicleController(ApplicationDbContext context,  IVehicleService vehicleService,
+                                UserManager<ApplicationUser> userManager, IImageService imageService)
         {
             _context = context;
             _vehicleService = vehicleService;
             _userManager = userManager;
+            _imageService = imageService;
             
         }
 
@@ -63,22 +66,31 @@ namespace projetNet.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Vin,Brand,Year")] Vehicle vehicle)
+        public async Task<IActionResult> Create( [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")] Vehicle vehicle, IFormFile? imageFile)
         {
             var ownerId = _userManager.GetUserId(User);
+
             try
             {
-                var created = await _vehicleService.CreateAsync(vehicle, ownerId);
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    await using var stream = imageFile.OpenReadStream();
+                    vehicle.ImageUrl = await _imageService.UploadImageAsync(
+                        stream,
+                        imageFile.FileName,
+                        "vehicles"
+                    );
+                }
 
-                // Redirect to Index action (list of vehicles)
+                await _vehicleService.CreateAsync(vehicle, ownerId);
                 return RedirectToAction(nameof(UserVehicle));
             }
             catch (Exception ex)
             {
-                // Return to the Create view with the model and error message
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View(vehicle);
             }
+
         }
 
 
@@ -103,7 +115,10 @@ namespace projetNet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Vin,Brand,Year")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(
+            Guid id,
+            [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")] Vehicle vehicle,
+            IFormFile? imageFile)
         {
             try
             {
@@ -111,15 +126,35 @@ namespace projetNet.Controllers
                 if (existingVehicle == null)
                     return NotFound();
 
-                // Update only the properties you allow
                 existingVehicle.Vin = vehicle.Vin;
                 existingVehicle.Brand = vehicle.Brand;
                 existingVehicle.Year = vehicle.Year;
-                // OwnerId stays intact
+                existingVehicle.Model = vehicle.Model;
+                existingVehicle.Price = vehicle.Price;
+                existingVehicle.RentalPrice = vehicle.RentalPrice;
+                
+                existingVehicle.Mileage = vehicle.Mileage;
+                existingVehicle.Location = vehicle.Location;
+                existingVehicle.Description = vehicle.Description;
+
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    // Optional: delete old image
+                    if (!string.IsNullOrEmpty(existingVehicle.ImageUrl))
+                    {
+                        await _imageService.DeleteImageAsync(existingVehicle.ImageUrl);
+                    }
+
+                    await using var stream = imageFile.OpenReadStream();
+                    existingVehicle.ImageUrl = await _imageService.UploadImageAsync(
+                        stream,
+                        imageFile.FileName,
+                        "vehicles"
+                    );
+                }
 
                 await _vehicleService.UpdateAsync(existingVehicle);
                 return RedirectToAction(nameof(UserVehicle));
-
             }
             catch (Exception ex)
             {
