@@ -11,8 +11,8 @@ using projetNet.Data;
 namespace projetNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260209003620_changes to vehicule")]
-    partial class changestovehicule
+    [Migration("20260209172824_AddRefreshTokenToUser")]
+    partial class AddRefreshTokenToUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
