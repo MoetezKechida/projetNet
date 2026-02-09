@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projetNet.Data;
 
@@ -10,9 +11,11 @@ using projetNet.Data;
 namespace projetNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260209174849_VehicleStatusMig")]
+    partial class VehicleStatusMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -344,9 +347,6 @@ namespace projetNet.Migrations
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("RentalPrice")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<string>("Status")
                         .HasColumnType("longtext");
 
@@ -364,7 +364,7 @@ namespace projetNet.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("07f24c63-1b31-41ed-badd-43c8e36d8699"),
+                            Id = new Guid("12f8d4c7-6cb9-49db-8a1b-29ad4087d8d7"),
                             Brand = "Toyota",
                             Description = "Reliable sedan, low mileage.",
                             ImageUrl = "/images/cars/toyota_corolla.jpg",
@@ -378,7 +378,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6bee9362-8e77-4784-92b1-2491146e0e83"),
+                            Id = new Guid("a9e40417-6a78-4e72-936a-694d8eb985d5"),
                             Brand = "BMW",
                             Description = "Luxury SUV, fully loaded.",
                             ImageUrl = "/images/cars/bmw_x5.jpg",
@@ -392,7 +392,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e041e38f-0207-4953-a5d8-711412a6cafd"),
+                            Id = new Guid("f0abfd68-f336-4ee2-89db-8588f2b2bdfb"),
                             Brand = "Renault",
                             Description = "Compact city car, economical.",
                             ImageUrl = "/images/cars/renault_clio.jpg",
