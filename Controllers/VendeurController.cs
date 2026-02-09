@@ -14,14 +14,14 @@ using projetNet.Services.ServiceContracts;
 namespace projetNet.Controllers
 {
     
-    public class VehicleController : Controller
+    public class VendeurController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IVehicleService _vehicleService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IImageService _imageService;
 
-        public VehicleController(ApplicationDbContext context,  IVehicleService vehicleService,
+        public VendeurController(ApplicationDbContext context,  IVehicleService vehicleService,
                                 UserManager<ApplicationUser> userManager, IImageService imageService)
         {
             _context = context;
@@ -32,25 +32,14 @@ namespace projetNet.Controllers
         }
 
         // GET: Vehicle
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Vehicles.ToListAsync());
-        }
+        
 
         public async Task<IActionResult> UserVehicle()
         {
             var vehicles = await _vehicleService.GetByOwnerIdAsync(_userManager.GetUserId(User));
             return View(vehicles);
         }
-        // GET: Vehicle/Details/5
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var vehicle = await _vehicleService.GetByIdAsync(id);
-            if (vehicle == null)
-                return NotFound();
-
-            return View(vehicle);
-        }
+        
         
 
         // GET: Vehicle/Create
