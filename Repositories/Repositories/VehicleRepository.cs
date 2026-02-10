@@ -14,6 +14,7 @@ public interface IVehicleRepository : IRepository<Vehicle>
     Task<IEnumerable<Vehicle>> GetByStatusAndBrandAsync(string status, string brand);
     Task<List<string>> GetDistinctBrandsAsync();
 
+    Task<IEnumerable<Vehicle>> GetByStatusAndOwnerAsync(string status, string ownerId);
 }
 
 public class VehicleRepository : Repository<Vehicle>, IVehicleRepository
@@ -40,6 +41,14 @@ public class VehicleRepository : Repository<Vehicle>, IVehicleRepository
         return await _dbSet
             .Where(v => v.Status== status)
             .Where(v => v.Brand == brand)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Vehicle>> GetByStatusAndOwnerAsync(string status, string ownerId)
+    {
+        return await _dbSet
+            .Where(v => v.Status== status)
+            .Where(v => v.OwnerId == ownerId)
             .ToListAsync();
     }
 

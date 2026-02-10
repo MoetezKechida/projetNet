@@ -20,23 +20,40 @@ namespace projetNet.Controllers
         private readonly IVehicleService _vehicleService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IImageService _imageService;
+        private readonly ILogger<VendeurController> _logger;
 
         public VendeurController(ApplicationDbContext context,  IVehicleService vehicleService,
-                                UserManager<ApplicationUser> userManager, IImageService imageService)
+                                UserManager<ApplicationUser> userManager, IImageService imageService,  ILogger<VendeurController> logger)
         {
             _context = context;
             _vehicleService = vehicleService;
             _userManager = userManager;
             _imageService = imageService;
+            _logger = logger;
             
         }
 
         // GET: Vehicle
         
 
-        public async Task<IActionResult> UserVehicle()
+        public async Task<IActionResult> UserVehicle(string status)
         {
-            var vehicles = await _vehicleService.GetByOwnerIdAsync(_userManager.GetUserId(User));
+            var ownerId = _userManager.GetUserId(User);
+
+            IEnumerable<Vehicle> vehicles;
+
+            if (string.IsNullOrEmpty(status))
+            {
+                vehicles = await _vehicleService.GetByOwnerIdAsync(ownerId);
+            }
+            else
+            {
+                vehicles = await _vehicleService.GetByStatusAndOwnerAsync(status, ownerId);
+            }
+
+            ViewBag.Statuses = new List<string> { "pending", "declined", "accepted" };
+            ViewBag.SelectedStatus = status;
+
             return View(vehicles);
         }
         
@@ -121,7 +138,7 @@ namespace projetNet.Controllers
                 existingVehicle.Model = vehicle.Model;
                 existingVehicle.Price = vehicle.Price;
                 existingVehicle.RentalPrice = vehicle.RentalPrice;
-                
+                existingVehicle.Status = "pending";
                 existingVehicle.Mileage = vehicle.Mileage;
                 existingVehicle.Location = vehicle.Location;
                 existingVehicle.Description = vehicle.Description;

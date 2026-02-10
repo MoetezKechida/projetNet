@@ -10,7 +10,7 @@ public class VehicleService : IVehicleService
 {
     private readonly IVehicleRepository _vehicleRepository;
     private readonly IAuditLogRepository _auditLogRepository;
-
+    
 
     public VehicleService(IVehicleRepository vehicleRepository, IAuditLogRepository auditLogRepository,
         UserManager<ApplicationUser> userManager)
@@ -37,6 +37,10 @@ public class VehicleService : IVehicleService
     public async Task<IEnumerable<Vehicle>> GetByStatusAsync(string status)
     {
         return await _vehicleRepository.GetByStatusAsync(status);
+    }
+    public async Task<IEnumerable<Vehicle>> GetByStatusAndOwnerAsync(string status,  string ownerId)
+    {
+        return await _vehicleRepository.GetByStatusAndOwnerAsync(status, ownerId);
     }
 
     public async Task<IEnumerable<Vehicle>> GetByStatusAndBrandAsync(string status, string brand)

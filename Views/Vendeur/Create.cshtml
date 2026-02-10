@@ -44,8 +44,8 @@
 
                 <div class="col-md-6">
                     <label asp-for="RentalPrice" class="form-label"></label>
-                    <input asp-for="RentalPrice" class="form-control" placeholder="Rental Price" readonly />
-                    <span class="form-text text-muted">Automatically set to the same as Price</span>
+                    <input asp-for="RentalPrice" class="form-control" placeholder="Rental Price" />
+                    <span asp-validation-for="RentalPrice" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6">
@@ -62,7 +62,7 @@
 
                 <div class="col-12">
                     <label class="form-label">Vehicle Image</label>
-                    <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+                    <input type="file" name="ImageFile" class="form-control" accept="image/*" required onchange="validateImage(this)" />
                 </div>
 
                 <div class="col-12">
@@ -79,3 +79,16 @@
         </form>
     </div>
 </div>
+
+<script>
+function validateImage(input) {
+    const file = input.files[0];
+    if (file) {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Only image files (jpg, png, gif, webp) are allowed.');
+            input.value = ''; // reset the input
+        }
+    }
+}
+</script>

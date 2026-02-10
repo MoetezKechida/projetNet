@@ -11,8 +11,8 @@ using projetNet.Data;
 namespace projetNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260210204613_userFix")]
-    partial class userFix
+    [Migration("20260210205739_InspectorModif")]
+    partial class InspectorModif
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -366,7 +366,7 @@ namespace projetNet.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c62d5f47-6c70-458d-b123-8378bc1765a5"),
+                            Id = new Guid("0100d552-05e6-464a-9145-364618f129bd"),
                             Brand = "Toyota",
                             Description = "Reliable sedan, low mileage.",
                             ImageUrl = "/images/cars/toyota_corolla.jpg",
@@ -380,7 +380,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("3277a085-a60e-456c-8387-dd0bba08b299"),
+                            Id = new Guid("caa0b06c-081a-4e7e-858b-a910ef480925"),
                             Brand = "BMW",
                             Description = "Luxury SUV, fully loaded.",
                             ImageUrl = "/images/cars/bmw_x5.jpg",
@@ -394,7 +394,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1a2e3650-765b-4b49-986f-786063683d24"),
+                            Id = new Guid("c564db1b-c8da-4dc9-b054-00ee5b771a8f"),
                             Brand = "Renault",
                             Description = "Compact city car, economical.",
                             ImageUrl = "/images/cars/renault_clio.jpg",

@@ -11,8 +11,8 @@ using projetNet.Data;
 namespace projetNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260210190156_InspectionChanges")]
-    partial class InspectionChanges
+    [Migration("20260210221553_InspectorModif2")]
+    partial class InspectorModif2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -270,11 +270,9 @@ namespace projetNet.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("InspectorId")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Report")
-                        .IsRequired()
+                    b.Property<string>("Reason")
                         .HasColumnType("longtext");
 
                     b.Property<Guid>("VehicleId")
@@ -366,7 +364,7 @@ namespace projetNet.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("15f4a38b-5cb6-4459-b890-c5ec7b721068"),
+                            Id = new Guid("340ba702-fea2-4167-827c-721b11562112"),
                             Brand = "Toyota",
                             Description = "Reliable sedan, low mileage.",
                             ImageUrl = "/images/cars/toyota_corolla.jpg",
@@ -380,7 +378,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0e1b6654-4260-4f33-abf9-6fdc98e1ab91"),
+                            Id = new Guid("3f874a2d-f82a-43d1-946a-8f1f70039032"),
                             Brand = "BMW",
                             Description = "Luxury SUV, fully loaded.",
                             ImageUrl = "/images/cars/bmw_x5.jpg",
@@ -394,7 +392,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8aca0891-dbe5-46bf-85d9-502589ae9501"),
+                            Id = new Guid("c6c77470-2443-4e0f-a36f-68e68465ccb9"),
                             Brand = "Renault",
                             Description = "Compact city car, economical.",
                             ImageUrl = "/images/cars/renault_clio.jpg",

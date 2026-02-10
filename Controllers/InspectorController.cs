@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,15 @@ namespace projetNet.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IVehicleService _vehicleService;
-
-        public InspectorController(ApplicationDbContext context, IVehicleService vehicleService)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IInspectionService _inspectionService;
+        public InspectorController(ApplicationDbContext context, IVehicleService vehicleService,
+                                    UserManager<ApplicationUser> userManager,  IInspectionService inspectionService)
         {
             _context = context;
             _vehicleService = vehicleService;
+            _userManager = userManager;
+            _inspectionService = inspectionService;
         }
 
         // GET: Inspector
@@ -71,26 +76,43 @@ namespace projetNet.Controllers
         }
 
         // GET: Inspector/Create
-        public IActionResult Create()
+        
+        public IActionResult Create(Guid vehicleId)
         {
-            return View();
+            
+            var inspection = new Inspection
+            {
+                VehicleId = vehicleId
+                
+            };
+
+            return View(inspection);
         }
 
         // POST: Inspector/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VehicleId,InspectorId,Report")] Inspection inspection)
-        {
-            if (ModelState.IsValid)
+        public async Task<IActionResult> Create(Guid vehicleId, [Bind("Reason")] Inspection inspection)
+        {   
+            ModelState.Remove(nameof(inspection.Id));
+            ModelState.Remove(nameof(inspection.InspectorId));
+            if (!ModelState.IsValid)
             {
-                inspection.Id = Guid.NewGuid();
-                _context.Add(inspection);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // Return view if reason is missing
+                inspection.VehicleId = vehicleId;
+                return View(inspection);
             }
-            return View(inspection);
+
+            // Call the service to create the inspection
+            await _inspectionService.CreateAsync(
+                vehicleId,
+                _userManager.GetUserId(User), // InspectorId from logged-in user
+                inspection.Reason
+            );
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Inspector/Edit/5
@@ -116,32 +138,17 @@ namespace projetNet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,VehicleId,InspectorId,Report")] Inspection inspection)
         {
-            if (id != inspection.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(inspection);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InspectionExists(inspection.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                inspection.Id = Guid.NewGuid();
+                inspection.InspectorId = _userManager.GetUserId(User); // automatically fill InspectorId
+
+                _context.Add(inspection);
+                await _context.SaveChangesAsync();
+                
             }
-            return View(inspection);
+            
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Inspector/Delete/5

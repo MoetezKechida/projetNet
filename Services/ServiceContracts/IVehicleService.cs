@@ -17,4 +17,5 @@ public interface IVehicleService
     Task DeleteAsync(Guid id);
     Task<bool> ExistsAsync(Guid id);
     Task<List<string>> GetDistinctBrandsAsync();
+    Task<IEnumerable<Vehicle>> GetByStatusAndOwnerAsync(string status, string ownerId);
 }

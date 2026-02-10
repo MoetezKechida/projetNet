@@ -8,8 +8,8 @@ public interface IInspectionService
     Task<IEnumerable<Inspection>> GetAllAsync();
     Task<IEnumerable<Inspection>> GetByVehicleIdAsync(Guid vehicleId);
     Task<IEnumerable<Inspection>> GetByInspectorIdAsync(string inspectorId);
-    
-    
+
+    Task<Inspection> CreateAsync(Guid vehicleId, string inspectorId, string reason);
     Task UpdateInspectionAsync(Inspection inspection);
     
     Task DeleteAsync(Guid id);
