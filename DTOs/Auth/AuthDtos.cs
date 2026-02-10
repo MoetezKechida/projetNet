@@ -8,7 +8,7 @@ public record RegisterRequest
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
     public required string PhoneNumber { get; init; }
-    public int Role { get; init; } // 0=Buyer, 1=Seller, 2=Inspector, 3=Admin
+    public string UserType { get; init; } = "Buyer";
 }
 
 public record LoginRequest
@@ -30,7 +30,7 @@ public record UserInfo
     public required string Id { get; init; }
     public required string Email { get; init; }
     public required string FullName { get; init; }
-    public int Role { get; init; }
+    public string? Role { get; init; }
     public bool IsEmailVerified { get; init; }
     public bool IsPhoneVerified { get; init; }
 }
