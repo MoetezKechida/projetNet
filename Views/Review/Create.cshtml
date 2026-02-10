@@ -1,0 +1,89 @@
+@model Review
+
+@{
+    ViewData["Title"] = "Create Review";
+}
+
+<div class="container mt-4">
+    <h1>Create Review</h1>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">New Review</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label asp-for="TargetId" class="form-label">Target ID</label>
+                            <input asp-for="TargetId" class="form-control" value="@ViewBag.TargetId" />
+                            <span asp-validation-for="TargetId" class="text-danger"></span>
+                            <small class="form-text text-muted">The ID of the user or entity being reviewed (e.g., seller ID, vehicle ID, etc.)</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Rating" class="form-label">Rating <span class="text-danger">*</span></label>
+                            <select asp-for="Rating" class="form-select" required>
+                                <option value="">-- Select Rating --</option>
+                                <option value="5">★★★★★ - 5 Stars (Excellent)</option>
+                                <option value="4">★★★★☆ - 4 Stars (Very Good)</option>
+                                <option value="3">★★★☆☆ - 3 Stars (Good)</option>
+                                <option value="2">★★☆☆☆ - 2 Stars (Fair)</option>
+                                <option value="1">★☆☆☆☆ - 1 Star (Poor)</option>
+                            </select>
+                            <span asp-validation-for="Rating" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Comment" class="form-label">Comment <span class="text-danger">*</span></label>
+                            <textarea asp-for="Comment" class="form-control" rows="5" required 
+                                      placeholder="Share your experience..."></textarea>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                            <small class="form-text text-muted">Please provide detailed feedback about your experience</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ReviewerId" class="form-label">Reviewer ID</label>
+                            <input asp-for="ReviewerId" class="form-control" />
+                            <span asp-validation-for="ReviewerId" class="text-danger"></span>
+                            <small class="form-text text-muted">Leave empty to use your current user ID</small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <button type="submit" class="btn btn-primary">Create Review</button>
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Review Guidelines</h5>
+                    <ul class="small">
+                        <li>Be honest and constructive in your feedback</li>
+                        <li>Focus on your experience with the service or product</li>
+                        <li>Provide specific details to help others</li>
+                        <li>Be respectful and professional</li>
+                        <li>Avoid personal attacks or inappropriate language</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

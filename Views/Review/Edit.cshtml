@@ -1,0 +1,110 @@
+@model Review
+
+@{
+    ViewData["Title"] = "Edit Review";
+}
+
+<div class="container mt-4">
+    <h1>Edit Review</h1>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h4 class="mb-0">Edit Review</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="CreatedAt" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Review ID</label>
+                            <input type="text" class="form-control" value="@Model.Id" disabled />
+                            <small class="form-text text-muted">Review ID cannot be changed</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ReviewerId" class="form-label">Reviewer ID</label>
+                            <input asp-for="ReviewerId" class="form-control" readonly />
+                            <span asp-validation-for="ReviewerId" class="text-danger"></span>
+                            <small class="form-text text-muted">Reviewer ID cannot be changed</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TargetId" class="form-label">Target ID</label>
+                            <input asp-for="TargetId" class="form-control" readonly />
+                            <span asp-validation-for="TargetId" class="text-danger"></span>
+                            <small class="form-text text-muted">Target ID cannot be changed</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Rating" class="form-label">Rating <span class="text-danger">*</span></label>
+                            <select asp-for="Rating" class="form-select" required>
+                                <option value="">-- Select Rating --</option>
+                                <option value="5">★★★★★ - 5 Stars (Excellent)</option>
+                                <option value="4">★★★★☆ - 4 Stars (Very Good)</option>
+                                <option value="3">★★★☆☆ - 3 Stars (Good)</option>
+                                <option value="2">★★☆☆☆ - 2 Stars (Fair)</option>
+                                <option value="1">★☆☆☆☆ - 1 Star (Poor)</option>
+                            </select>
+                            <span asp-validation-for="Rating" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Comment" class="form-label">Comment <span class="text-danger">*</span></label>
+                            <textarea asp-for="Comment" class="form-control" rows="5" required 
+                                      placeholder="Share your experience..."></textarea>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                            <small class="form-text text-muted">Update your review comment</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Originally Created</label>
+                            <input type="text" class="form-control" value="@Model.CreatedAt.ToString("MMMM dd, yyyy 'at' h:mm tt")" disabled />
+                            <small class="form-text text-muted">Original creation date</small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <button type="submit" class="btn btn-warning">Save Changes</button>
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">View Details</a>
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Edit Guidelines</h5>
+                    <ul class="small">
+                        <li>You can update your rating and comment</li>
+                        <li>Reviewer, Target, and Review IDs cannot be changed</li>
+                        <li>The original creation date is preserved</li>
+                        <li>Ensure your updates remain fair and accurate</li>
+                    </ul>
+                    
+                    <hr />
+                    
+                    <h6>Current Information:</h6>
+                    <p class="small mb-1"><strong>Created:</strong></p>
+                    <p class="small text-muted">@Model.CreatedAt.ToString("MMM dd, yyyy")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
