@@ -1,0 +1,103 @@
+@model Review
+
+@{
+    ViewData["Title"] = "Delete Review";
+}
+
+<div class="container mt-4">
+    <h1 class="text-danger">Delete Review</h1>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">⚠️ Confirmation Required</h4>
+        <p class="mb-0">Are you sure you want to delete this review? This action cannot be undone.</p>
+    </div>
+
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Review to be Deleted</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Review ID</dt>
+                <dd class="col-sm-9">
+                    <code>@Model.Id</code>
+                </dd>
+
+                <dt class="col-sm-3">Rating</dt>
+                <dd class="col-sm-9">
+                    <span class="badge bg-warning text-dark fs-5">
+                        @for (int i = 0; i < Model.Rating; i++)
+                        {
+                            <span>★</span>
+                        }
+                        @for (int i = Model.Rating; i < 5; i++)
+                        {
+                            <span>☆</span>
+                        }
+                        @Model.Rating / 5
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Comment</dt>
+                <dd class="col-sm-9">
+                    <div class="border p-3 rounded bg-light">
+                        @Model.Comment
+                    </div>
+                </dd>
+
+                <dt class="col-sm-3">Reviewer ID</dt>
+                <dd class="col-sm-9">
+                    <code>@Model.ReviewerId</code>
+                </dd>
+
+                <dt class="col-sm-3">Target ID</dt>
+                <dd class="col-sm-9">
+                    <code>@Model.TargetId</code>
+                </dd>
+
+                <dt class="col-sm-3">Created At</dt>
+                <dd class="col-sm-9">
+                    @Model.CreatedAt.ToString("MMMM dd, yyyy 'at' h:mm tt")
+                    <br />
+                    <small class="text-muted">(@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss") UTC)</small>
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <form asp-action="Delete" method="post" class="d-inline">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you absolutely sure you want to delete this review? This action cannot be undone.');">
+                    <i class="bi bi-trash"></i> Confirm Delete
+                </button>
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">View Details</a>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h6 class="card-title">⚠️ Important Notice</h6>
+                <ul class="small mb-0">
+                    <li>Deleting this review will permanently remove it from the system</li>
+                    <li>This action cannot be reversed</li>
+                    <li>Historical data and statistics may be affected</li>
+                    <li>Consider carefully before proceeding</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
