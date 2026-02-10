@@ -40,42 +40,9 @@ public class InspectionService : IInspectionService
         return await _inspectionRepository.GetByInspectorIdAsync(inspectorId);
     }
 
-    public async Task<IEnumerable<Inspection>> GetPendingInspectionsAsync()
-    {
-        return await _inspectionRepository.GetPendingInspectionsAsync();
-    }
+    
 
-    public async Task<Inspection> ScheduleInspectionAsync(Inspection inspection)
-    {
-        // Validate vehicle exists
-        var vehicleExists = await _vehicleRepository.ExistsAsync(inspection.VehicleId);
-        if (!vehicleExists)
-        {
-            throw new KeyNotFoundException($"Vehicle with ID {inspection.VehicleId} not found.");
-        }
-
-        // Validate scheduled date is in the future
-        if (inspection.ScheduledDate <= DateTime.UtcNow)
-        {
-            throw new ArgumentException("Scheduled date must be in the future.");
-        }
-
-        inspection.Status = "Pending";
-        inspection.Report = string.Empty;
-        
-        var result = await _inspectionRepository.AddAsync(inspection);
-
-        // Log the action
-        await _auditLogRepository.AddAsync(new AuditLog
-        {
-            UserId = inspection.InspectorId,
-            Action = "Schedule Inspection",
-            EntityType = "Inspection",
-            Timestamp = DateTime.UtcNow
-        });
-
-        return result;
-    }
+    
 
     public async Task UpdateInspectionAsync(Inspection inspection)
     {
@@ -91,33 +58,7 @@ public class InspectionService : IInspectionService
         });
     }
 
-    public async Task CompleteInspectionAsync(Guid id, string report)
-    {
-        var inspection = await _inspectionRepository.GetByIdAsync(id);
-        if (inspection == null)
-        {
-            throw new KeyNotFoundException($"Inspection with ID {id} not found.");
-        }
-
-        if (string.IsNullOrWhiteSpace(report))
-        {
-            throw new ArgumentException("Report cannot be empty.");
-        }
-
-        inspection.Status = "Completed";
-        inspection.Report = report;
-        
-        await _inspectionRepository.UpdateAsync(inspection);
-
-        // Log the action
-        await _auditLogRepository.AddAsync(new AuditLog
-        {
-            UserId = inspection.InspectorId,
-            Action = "Complete Inspection",
-            EntityType = "Inspection",
-            Timestamp = DateTime.UtcNow
-        });
-    }
+    
 
     public async Task DeleteAsync(Guid id)
     {

@@ -10,13 +10,13 @@ public class VehicleService : IVehicleService
 {
     private readonly IVehicleRepository _vehicleRepository;
     private readonly IAuditLogRepository _auditLogRepository;
-    
 
-    public VehicleService(IVehicleRepository vehicleRepository, IAuditLogRepository auditLogRepository,  UserManager<ApplicationUser> userManager)
+
+    public VehicleService(IVehicleRepository vehicleRepository, IAuditLogRepository auditLogRepository,
+        UserManager<ApplicationUser> userManager)
     {
         _vehicleRepository = vehicleRepository;
         _auditLogRepository = auditLogRepository;
-        
     }
 
     public async Task<Vehicle?> GetByIdAsync(Guid id)
@@ -32,6 +32,16 @@ public class VehicleService : IVehicleService
     public async Task<IEnumerable<Vehicle>> GetByOwnerIdAsync(string ownerId)
     {
         return await _vehicleRepository.GetByOwnerIdAsync(ownerId);
+    }
+
+    public async Task<IEnumerable<Vehicle>> GetByStatusAsync(string status)
+    {
+        return await _vehicleRepository.GetByStatusAsync(status);
+    }
+
+    public async Task<IEnumerable<Vehicle>> GetByStatusAndBrandAsync(string status, string brand)
+    {
+        return await _vehicleRepository.GetByStatusAndBrandAsync(status, brand);
     }
 
     public async Task<Vehicle?> GetByVinAsync(string vin)
@@ -106,5 +116,10 @@ public class VehicleService : IVehicleService
     public async Task<bool> ExistsAsync(Guid id)
     {
         return await _vehicleRepository.ExistsAsync(id);
+    }
+
+    public async Task<List<string>> GetDistinctBrandsAsync()
+    {
+        return await _vehicleRepository.GetDistinctBrandsAsync();
     }
 }

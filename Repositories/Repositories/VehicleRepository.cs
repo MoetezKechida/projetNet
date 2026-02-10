@@ -10,6 +10,10 @@ public interface IVehicleRepository : IRepository<Vehicle>
     Task<IEnumerable<Vehicle>> GetByOwnerIdAsync(string ownerId);
     Task<Vehicle?> GetByVinAsync(string vin);
     Task<IEnumerable<Vehicle>> SearchAsync(string? brand, int? minYear, int? maxYear);
+    Task<IEnumerable<Vehicle>> GetByStatusAsync(string status);
+    Task<IEnumerable<Vehicle>> GetByStatusAndBrandAsync(string status, string brand);
+    Task<List<string>> GetDistinctBrandsAsync();
+
 }
 
 public class VehicleRepository : Repository<Vehicle>, IVehicleRepository
@@ -22,6 +26,20 @@ public class VehicleRepository : Repository<Vehicle>, IVehicleRepository
     {
         return await _dbSet
             .Where(v => v.OwnerId == ownerId)
+            .ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Vehicle>> GetByStatusAsync(string status)
+    {
+        return await _dbSet
+            .Where(v => v.Status== status)
+            .ToListAsync();
+    }
+    public async Task<IEnumerable<Vehicle>> GetByStatusAndBrandAsync(string status, string brand)
+    {
+        return await _dbSet
+            .Where(v => v.Status== status)
+            .Where(v => v.Brand == brand)
             .ToListAsync();
     }
 
@@ -45,5 +63,15 @@ public class VehicleRepository : Repository<Vehicle>, IVehicleRepository
             query = query.Where(v => v.Year <= maxYear.Value);
 
         return await query.ToListAsync();
+    }
+    
+    public async Task<List<string>> GetDistinctBrandsAsync()
+    {
+        var query = _dbSet.AsQueryable();
+        
+        return await query
+            .Select(v => v.Brand)
+            .Distinct()
+            .ToListAsync();
     }
 }

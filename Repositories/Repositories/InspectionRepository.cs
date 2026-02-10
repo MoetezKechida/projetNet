@@ -9,7 +9,7 @@ public interface IInspectionRepository : IRepository<Inspection>
 {
     Task<IEnumerable<Inspection>> GetByVehicleIdAsync(Guid vehicleId);
     Task<IEnumerable<Inspection>> GetByInspectorIdAsync(string inspectorId);
-    Task<IEnumerable<Inspection>> GetPendingInspectionsAsync();
+    
 }
 
 public class InspectionRepository : Repository<Inspection>, IInspectionRepository
@@ -22,7 +22,7 @@ public class InspectionRepository : Repository<Inspection>, IInspectionRepositor
     {
         return await _dbSet
             .Where(i => i.VehicleId == vehicleId)
-            .OrderByDescending(i => i.ScheduledDate)
+            
             .ToListAsync();
     }
 
@@ -30,15 +30,9 @@ public class InspectionRepository : Repository<Inspection>, IInspectionRepositor
     {
         return await _dbSet
             .Where(i => i.InspectorId == inspectorId)
-            .OrderByDescending(i => i.ScheduledDate)
+            
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Inspection>> GetPendingInspectionsAsync()
-    {
-        return await _dbSet
-            .Where(i => i.Status == "Pending")
-            .OrderBy(i => i.ScheduledDate)
-            .ToListAsync();
-    }
+    
 }

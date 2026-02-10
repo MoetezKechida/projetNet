@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projetNet.Data;
 
@@ -10,9 +11,11 @@ using projetNet.Data;
 namespace projetNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260210190156_InspectionChanges")]
+    partial class InspectionChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,7 +366,7 @@ namespace projetNet.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c62d5f47-6c70-458d-b123-8378bc1765a5"),
+                            Id = new Guid("15f4a38b-5cb6-4459-b890-c5ec7b721068"),
                             Brand = "Toyota",
                             Description = "Reliable sedan, low mileage.",
                             ImageUrl = "/images/cars/toyota_corolla.jpg",
@@ -377,7 +380,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("3277a085-a60e-456c-8387-dd0bba08b299"),
+                            Id = new Guid("0e1b6654-4260-4f33-abf9-6fdc98e1ab91"),
                             Brand = "BMW",
                             Description = "Luxury SUV, fully loaded.",
                             ImageUrl = "/images/cars/bmw_x5.jpg",
@@ -391,7 +394,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1a2e3650-765b-4b49-986f-786063683d24"),
+                            Id = new Guid("8aca0891-dbe5-46bf-85d9-502589ae9501"),
                             Brand = "Renault",
                             Description = "Compact city car, economical.",
                             ImageUrl = "/images/cars/renault_clio.jpg",
