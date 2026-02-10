@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using projetNet.Constants;
 using projetNet.Models;
 
 namespace projetNet.Data;
@@ -10,7 +11,7 @@ public static class DbSeeder
         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-        string[] roleNames = { "Buyer", "Seller", "Inspector", "Admin" };
+        string[] roleNames = Roles.All;
 
         foreach (var roleName in roleNames)
         {
@@ -47,7 +48,7 @@ public static class DbSeeder
                 
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                    await userManager.AddToRoleAsync(adminUser, Roles.Admin);
                 }
             }
         }

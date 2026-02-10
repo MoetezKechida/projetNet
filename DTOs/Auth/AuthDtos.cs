@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using projetNet.Constants;
+
 namespace projetNet.DTOs.Auth;
 
 public record RegisterRequest
@@ -8,7 +11,7 @@ public record RegisterRequest
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
     public required string PhoneNumber { get; init; }
-    public string UserType { get; init; } = "Buyer";
+    public string UserType { get; init; } = Roles.Buyer;
 }
 
 public record LoginRequest
