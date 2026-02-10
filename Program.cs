@@ -26,8 +26,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true);
-
 // Configure Identity
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
 {
@@ -39,7 +37,6 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.Password.RequireLowercase = true;
 })
     .AddRoles<IdentityRole>()
-
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Configure JWT Authentication
@@ -102,6 +99,9 @@ builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Add Email Sender (for Identity UI)
+builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, NoOpEmailSender>();
 
 // Add CORS
 builder.Services.AddCors(options =>
