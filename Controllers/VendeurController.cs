@@ -1,209 +1,114 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using projetNet.Data;
 using projetNet.Models;
 using projetNet.Services.ServiceContracts;
 
 namespace projetNet.Controllers
 {
-    
+    [Authorize]
     public class VendeurController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IVehicleService _vehicleService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IImageService _imageService;
-        private readonly ILogger<VendeurController> _logger;
 
-        public VendeurController(ApplicationDbContext context,  IVehicleService vehicleService,
-                                UserManager<ApplicationUser> userManager, IImageService imageService,  ILogger<VendeurController> logger)
+        public VendeurController(
+            IVehicleService vehicleService,
+            UserManager<ApplicationUser> userManager)
         {
-            _context = context;
             _vehicleService = vehicleService;
             _userManager = userManager;
-            _imageService = imageService;
-            _logger = logger;
-            
         }
 
-        // GET: Vehicle
-        
-
-        public async Task<IActionResult> UserVehicle(string status)
+        // GET: Vendeur
+        public async Task<IActionResult> Index()
         {
-            var ownerId = _userManager.GetUserId(User);
-
-            IEnumerable<Vehicle> vehicles;
-
-            if (string.IsNullOrEmpty(status))
-            {
-                vehicles = await _vehicleService.GetByOwnerIdAsync(ownerId);
-            }
-            else
-            {
-                vehicles = await _vehicleService.GetByStatusAndOwnerAsync(status, ownerId);
-            }
-
-            ViewBag.Statuses = new List<string> { "pending", "declined", "accepted" };
-            ViewBag.SelectedStatus = status;
-
+            var userId = _userManager.GetUserId(User);
+            var vehicles = await _vehicleService.GetByOwnerIdAsync(userId!);
             return View(vehicles);
         }
-        
-        
 
-        // GET: Vehicle/Create
+        // GET: Vendeur/Details/5
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var vehicle = await _vehicleService.GetByIdAsync(id);
+            if (vehicle == null) return NotFound();
+            return View(vehicle);
+        }
+
+        // GET: Vendeur/Create
         public IActionResult Create()
         {
-            
             return View();
         }
 
-        // POST: Vehicle/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Vendeur/Create
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")] Vehicle vehicle, IFormFile? imageFile)
+        public async Task<IActionResult> Create([Bind("Id,Vin,Brand,Model,Year,ImageUrl,Price,Description,Mileage,Location")] Vehicle vehicle)
         {
-            var ownerId = _userManager.GetUserId(User);
-
-            try
+            if (ModelState.IsValid)
             {
-                if (imageFile != null && imageFile.Length > 0)
-                {
-                    await using var stream = imageFile.OpenReadStream();
-                    vehicle.ImageUrl = await _imageService.UploadImageAsync(
-                        stream,
-                        imageFile.FileName,
-                        "vehicles"
-                    );
-                }
-
-                await _vehicleService.CreateAsync(vehicle, ownerId);
-                return RedirectToAction(nameof(UserVehicle));
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return View(vehicle);
-            }
-
-        }
-
-
-        // GET: Vehicle/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vehicle = await _context.Vehicles.FindAsync(id);
-            if (vehicle == null)
-            {
-                return NotFound();
+                vehicle.Id = Guid.NewGuid();
+                vehicle.OwnerId = _userManager.GetUserId(User);
+                vehicle.Status = "pending";
+                await _vehicleService.CreateAsync(vehicle, vehicle.OwnerId!);
+                return RedirectToAction(nameof(Index));
             }
             return View(vehicle);
         }
 
-        // POST: Vehicle/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            Guid id,
-            [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")] Vehicle vehicle,
-            IFormFile? imageFile)
+        // GET: Vendeur/Edit/5
+        public async Task<IActionResult> Edit(Guid id)
         {
-            try
-            {
-                var existingVehicle = await _vehicleService.GetByIdAsync(id);
-                if (existingVehicle == null)
-                    return NotFound();
-
-                existingVehicle.Vin = vehicle.Vin;
-                existingVehicle.Brand = vehicle.Brand;
-                existingVehicle.Year = vehicle.Year;
-                existingVehicle.Model = vehicle.Model;
-                existingVehicle.Price = vehicle.Price;
-                existingVehicle.RentalPrice = vehicle.RentalPrice;
-                existingVehicle.Status = "pending";
-                existingVehicle.Mileage = vehicle.Mileage;
-                existingVehicle.Location = vehicle.Location;
-                existingVehicle.Description = vehicle.Description;
-
-                if (imageFile != null && imageFile.Length > 0)
-                {
-                    // Optional: delete old image
-                    if (!string.IsNullOrEmpty(existingVehicle.ImageUrl))
-                    {
-                        await _imageService.DeleteImageAsync(existingVehicle.ImageUrl);
-                    }
-
-                    await using var stream = imageFile.OpenReadStream();
-                    existingVehicle.ImageUrl = await _imageService.UploadImageAsync(
-                        stream,
-                        imageFile.FileName,
-                        "vehicles"
-                    );
-                }
-
-                await _vehicleService.UpdateAsync(existingVehicle);
-                return RedirectToAction(nameof(UserVehicle));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
-
-        // GET: Vehicle/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vehicle = await _context.Vehicles
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-
+            var vehicle = await _vehicleService.GetByIdAsync(id);
+            if (vehicle == null) return NotFound();
             return View(vehicle);
         }
 
-        // POST: Vehicle/Delete/5
+        // POST: Vendeur/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Vin,Brand,Model,Year,ImageUrl,Price,Description,Mileage,Location")] Vehicle vehicle)
+        {
+            if (id != vehicle.Id) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                var existing = await _vehicleService.GetByIdAsync(id);
+                if (existing == null) return NotFound();
+
+                existing.Vin = vehicle.Vin;
+                existing.Brand = vehicle.Brand;
+                existing.Model = vehicle.Model;
+                existing.Year = vehicle.Year;
+                existing.ImageUrl = vehicle.ImageUrl;
+                existing.Price = vehicle.Price;
+                existing.Description = vehicle.Description;
+                existing.Mileage = vehicle.Mileage;
+                existing.Location = vehicle.Location;
+
+                await _vehicleService.UpdateAsync(existing);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(vehicle);
+        }
+
+        // GET: Vendeur/Delete/5
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var vehicle = await _vehicleService.GetByIdAsync(id);
+            if (vehicle == null) return NotFound();
+            return View(vehicle);
+        }
+
+        // POST: Vendeur/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var vehicle = await _context.Vehicles.FindAsync(id);
-            if (vehicle != null)
-            {
-                _context.Vehicles.Remove(vehicle);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(UserVehicle));
-        }
-
-        private bool VehicleExists(Guid id)
-        {
-            return _context.Vehicles.Any(e => e.Id == id);
+            await _vehicleService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

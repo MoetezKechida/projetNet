@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using projetNet.Models;
 using projetNet.Repositories;
 using projetNet.Repositories.Repositories;
@@ -10,10 +9,8 @@ public class VehicleService : IVehicleService
 {
     private readonly IVehicleRepository _vehicleRepository;
     private readonly IAuditLogRepository _auditLogRepository;
-    
 
-    public VehicleService(IVehicleRepository vehicleRepository, IAuditLogRepository auditLogRepository,
-        UserManager<ApplicationUser> userManager)
+    public VehicleService(IVehicleRepository vehicleRepository, IAuditLogRepository auditLogRepository)
     {
         _vehicleRepository = vehicleRepository;
         _auditLogRepository = auditLogRepository;

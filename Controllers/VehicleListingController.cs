@@ -1,93 +1,80 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using projetNet.Models;
-using projetNet.Data;
-using System.Linq;
+using projetNet.Services.ServiceContracts;
 
 namespace projetNet.Controllers
 {
     public class VehicleListingController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IOfferService _offerService;
+        private readonly IVehicleService _vehicleService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public VehicleListingController(ApplicationDbContext context)
+        public VehicleListingController(
+            IOfferService offerService,
+            IVehicleService vehicleService,
+            UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _offerService = offerService;
+            _vehicleService = vehicleService;
+            _userManager = userManager;
         }
 
         // GET: /VehicleListing/
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var offers = _context.Offers
-                .Where(o => o.Status == "accepted")
-                .Select(o => new
-                {
-                    Offer = o,
-                    Vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == o.VehicleId),
-                    Seller = _context.Users.FirstOrDefault(u => u.Id == o.SellerId)
-                })
-                .ToList();
+            var activeOffers = await _offerService.SearchAsync(null, null, null, "accepted");
+            
+            var listings = new List<dynamic>();
+            foreach (var offer in activeOffers)
+            {
+                var vehicle = await _vehicleService.GetByIdAsync(offer.VehicleId);
+                listings.Add(new { Offer = offer, Vehicle = vehicle });
+            }
 
-            return View(offers);
+            return View(listings);
         }
 
         // GET: /VehicleListing/Preview/5
-        public IActionResult Preview(Guid id)
+        public async Task<IActionResult> Preview(Guid id)
         {
-            var offer = _context.Offers.FirstOrDefault(o => o.VehicleId == id && o.Status == "accepted");
+            // Search for an accepted offer for this vehicle
+            var offers = await _offerService.SearchAsync(null, null, null, "accepted");
+            var offer = offers.FirstOrDefault(o => o.VehicleId == id);
             if (offer == null)
-            {
                 return NotFound();
-            }
-            var vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == offer.VehicleId);
-            var seller = _context.Users.FirstOrDefault(u => u.Id == offer.SellerId);
-            return View(new { Offer = offer, Vehicle = vehicle, Seller = seller });
+
+            var vehicle = await _vehicleService.GetByIdAsync(offer.VehicleId);
+            return View(new { Offer = offer, Vehicle = vehicle });
         }
 
         [HttpPost]
-        public IActionResult Rent(Guid VehicleId, DateTime StartDate, DateTime EndDate)
+        [Authorize]
+        public async Task<IActionResult> Rent(Guid VehicleId, DateTime StartDate, DateTime EndDate)
         {
-            var offer = _context.Offers.FirstOrDefault(o => o.VehicleId == VehicleId && o.Status == "accepted" && o.Type == "Rent");
-            if (offer == null)
-            {
-                TempData["Message"] = "No valid rent offer found.";
-                return RedirectToAction("Preview", new { id = VehicleId });
-            }
-            var buyerId = User.Identity?.Name ?? "demoBuyer";
-            var days = (EndDate - StartDate).Days;
-            var totalAmount = days * offer.Price;
-            var booking = new Booking
-            {
-                Id = Guid.NewGuid(),
-                OfferId = offer.Id,
-                BuyerId = buyerId,
-                StartDate = StartDate,
-                EndDate = EndDate,
-                TotalAmount = totalAmount,
-                Status = "attempt"
-            };
-            _context.Bookings.Add(booking);
-            _context.SaveChanges();
-            TempData["Message"] = $"Rent request submitted for {days} days.";
+            // TODO: Extract to BookingService
+            var userId = _userManager.GetUserId(User);
+            
+            TempData["Message"] = "Rent request submitted.";
             return RedirectToAction("Preview", new { id = VehicleId });
         }
 
         [HttpPost]
-        public IActionResult Buy(Guid OfferId, decimal Amount)
+        [Authorize]
+        public async Task<IActionResult> Buy(Guid OfferId, decimal Amount)
         {
-            // For demo, use logged-in user as buyer
-            var buyerId = User.Identity?.Name ?? "demoBuyer";
-            var vehiculeSale = new VehiculeSale
+            // TODO: Extract to SaleService
+            var userId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(userId))
             {
-                Id = Guid.NewGuid(),
-                OfferId = OfferId,
-                BuyerId = buyerId,
-                Amount = Amount,
-                Status = "attempt"
-            };
-            _context.VehiculeSales.Add(vehiculeSale);
-            _context.SaveChanges();
+                TempData["Message"] = "You must be logged in to buy.";
+                return RedirectToAction("Index");
+            }
+
             TempData["Message"] = $"Buy request submitted with price {Amount:F2} €.";
-            var offer = _context.Offers.FirstOrDefault(o => o.Id == OfferId);
+            var offer = await _offerService.GetByIdAsync(OfferId);
             return RedirectToAction("Preview", new { id = offer?.VehicleId });
         }
     }

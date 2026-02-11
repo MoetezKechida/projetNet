@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using projetNet.Constants;
 using projetNet.DTOs.Auth;
 using projetNet.Exceptions;
 using projetNet.Models;
@@ -39,8 +40,11 @@ public class AuthService : IAuthService
         {
             UserName = request.Email,
             Email = request.Email,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
             EmailConfirmed = true, // Set to true for development, false for production
-            PhoneNumber = request.PhoneNumber
+            PhoneNumber = request.PhoneNumber,
+            CreatedAt = DateTime.UtcNow
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
@@ -51,14 +55,12 @@ public class AuthService : IAuthService
         }
 
         // Assign role based on request
-        var roleName = request.Role switch
+        // Validate and assign role
+        var roleName = request.UserType;
+        if (!Roles.Registerable.Contains(roleName))
         {
-            0 => "Buyer",
-            1 => "Seller",
-            2 => "Inspector",
-            3 => "Admin",
-            _ => "Buyer"
-        };
+            roleName = Roles.Buyer; // Default to Buyer if invalid role requested
+        }
 
         await _userManager.AddToRoleAsync(user, roleName);
 
@@ -75,13 +77,13 @@ public class AuthService : IAuthService
         {
             Token = accessToken,
             RefreshToken = refreshToken,
-            ExpiresAt = DateTime.UtcNow.AddMinutes(60),
+            ExpiresAt = DateTime.UtcNow.AddMinutes(_jwtService.GetTokenExpiryMinutes()),
             User = new UserInfo
             {
                 Id = user.Id,
                 Email = user.Email!,
-                FullName = $"{request.FirstName} {request.LastName}",
-                Role = request.Role,
+                FullName = $"{user.FirstName} {user.LastName}",
+                Role = roleName,
                 IsEmailVerified = user.EmailConfirmed,
                 IsPhoneVerified = user.PhoneNumberConfirmed
             }
@@ -116,13 +118,13 @@ public class AuthService : IAuthService
         {
             Token = accessToken,
             RefreshToken = refreshToken,
-            ExpiresAt = DateTime.UtcNow.AddMinutes(60),
+            ExpiresAt = DateTime.UtcNow.AddMinutes(_jwtService.GetTokenExpiryMinutes()),
             User = new UserInfo
             {
                 Id = user.Id,
                 Email = user.Email!,
-                FullName = user.UserName ?? user.Email!,
-                Role = roles.Contains("Admin") ? 3 : roles.Contains("Inspector") ? 2 : roles.Contains("Seller") ? 1 : 0,
+                FullName = $"{user.FirstName} {user.LastName}".Trim(),
+                Role = roles.FirstOrDefault() ?? Roles.Buyer,
                 IsEmailVerified = user.EmailConfirmed,
                 IsPhoneVerified = user.PhoneNumberConfirmed
             }
@@ -157,13 +159,13 @@ public class AuthService : IAuthService
         {
             Token = newAccessToken,
             RefreshToken = newRefreshToken,
-            ExpiresAt = DateTime.UtcNow.AddMinutes(60),
+            ExpiresAt = DateTime.UtcNow.AddMinutes(_jwtService.GetTokenExpiryMinutes()),
             User = new UserInfo
             {
                 Id = user.Id,
                 Email = user.Email!,
-                FullName = user.UserName ?? user.Email!,
-                Role = roles.Contains("Admin") ? 3 : roles.Contains("Inspector") ? 2 : roles.Contains("Seller") ? 1 : 0,
+                FullName = $"{user.FirstName} {user.LastName}".Trim(),
+                Role = roles.FirstOrDefault() ?? Roles.Buyer,
                 IsEmailVerified = user.EmailConfirmed,
                 IsPhoneVerified = user.PhoneNumberConfirmed
             }

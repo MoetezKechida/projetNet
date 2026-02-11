@@ -21,9 +21,19 @@ using projetNet.Services.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite");
+if (useSqlite)
+{
+    var dbPath = Path.Combine(builder.Environment.ContentRootPath, "app.db");
+    var sqliteConn = $"Data Source={dbPath}";
+    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(sqliteConn));
+}
+else
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+}
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Configure Identity
@@ -104,7 +114,10 @@ builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// Add Email Sender (for Identity UI)
+// Email services
+builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+// Note: EmailService requires FluentEmail (IFluentEmail) to be registered.
+// For development, we register a no-op email sender. In production, configure FluentEmail.
 builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, NoOpEmailSender>();
 
 // Add CORS
@@ -123,7 +136,7 @@ builder.Services.AddScoped<IImageService, LocalFileImageService>();
 
 var app = builder.Build();
 
-// Seed roles
+// Seed roles and admin
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -136,6 +149,7 @@ using (var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new IdentityRole(roleName));
         }
     }
+    await DbSeeder.SeedRolesAndAdminAsync(scope.ServiceProvider);
 }
 
 // Configure the HTTP request pipeline.

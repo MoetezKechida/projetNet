@@ -77,4 +77,9 @@ public class JwtService : IJwtService
 
         return principal;
     }
+
+    public int GetTokenExpiryMinutes()
+    {
+        return Convert.ToInt32(_configuration["Jwt:ExpiryInMinutes"] ?? "60");
+    }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -28,31 +28,16 @@ namespace projetNet.Migrations
                 keyColumn: "Id",
                 keyValue: new Guid("e041e38f-0207-4953-a5d8-711412a6cafd"));
 
-            migrationBuilder.AddColumn<string>(
-                name: "RefreshToken",
-                table: "AspNetUsers",
-                type: "longtext",
-                nullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "RefreshTokenExpiryTime",
-                table: "AspNetUsers",
-                type: "datetime(6)",
-                nullable: true);
-
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsVerifiedSeller", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RefreshToken", "RefreshTokenExpiryTime", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[,]
-                {
-                    { "owner1", 0, "58fea65b-c000-43c3-9153-3e50e8807fc1", null, null, false, "Jean", true, "Dupont", false, null, null, null, null, null, false, null, null, "24afc70a-aa24-427b-bd72-b4bf858e9eec", false, "seller1" },
-                    { "owner2", 0, "8a35e6bf-01a3-4529-a4b8-ffa094d81b62", null, null, false, "Marie", false, "Curie", false, null, null, null, null, null, false, null, null, "79d51093-e5dc-477f-91d1-17be29427410", false, "seller2" },
-                    { "owner3", 0, "c66dfb1e-a1e2-4773-901d-716fa0a400ec", null, null, false, "Ali", true, "Ben Salah", false, null, null, null, null, null, false, null, null, "2adf0f92-50c1-4cf5-bbdf-17b199313dec", false, "seller3" },
-                    { "owner4", 0, "b10fd30b-2d92-47cd-93c9-0692a7415c4e", null, null, false, "Sophie", true, "Martin", false, null, null, null, null, null, false, null, null, "c65df75a-dea5-4455-9082-b58fcc577a58", false, "seller4" },
-                    { "owner5", 0, "24b4b289-1ff4-42ff-be61-c08fec25ce6f", null, null, false, "David", false, "Smith", false, null, null, null, null, null, false, null, null, "7fc201a4-33eb-4f49-8603-7a6848fad102", false, "seller5" },
-                    { "owner6", 0, "e18697d0-5d70-4149-b0b2-5f451550ad8a", null, null, false, "Fatima", true, "El Amrani", false, null, null, null, null, null, false, null, null, "51eb85f6-cfa1-4cc8-a74a-ed3b907deab4", false, "seller6" }
-                });
+            migrationBuilder.Sql(@"
+                INSERT INTO ""AspNetUsers"" (""Id"", ""AccessFailedCount"", ""ConcurrencyStamp"", ""CreatedAt"", ""Email"", ""EmailConfirmed"", ""FirstName"", ""IsEmailVerified"", ""IsPhoneVerified"", ""IsVerifiedSeller"", ""LastName"", ""LockoutEnabled"", ""LockoutEnd"", ""NormalizedEmail"", ""NormalizedUserName"", ""PasswordHash"", ""PhoneNumber"", ""PhoneNumberConfirmed"", ""SellerRating"", ""SellerReviewCount"", ""SecurityStamp"", ""TwoFactorEnabled"", ""UserName"")
+                VALUES
+                ('owner1', 0, '58fea65b-c000-43c3-9153-3e50e8807fc1', NULL, NULL, 0, 'Jean', 0, 0, 1, 'Dupont', 0, NULL, NULL, NULL, NULL, NULL, 0, 0.0, 0, '24afc70a-aa24-427b-bd72-b4bf858e9eec', 0, 'seller1'),
+                ('owner2', 0, '8a35e6bf-01a3-4529-a4b8-ffa094d81b62', NULL, NULL, 0, 'Marie', 0, 0, 0, 'Curie', 0, NULL, NULL, NULL, NULL, NULL, 0, 0.0, 0, '79d51093-e5dc-477f-91d1-17be29427410', 0, 'seller2'),
+                ('owner3', 0, 'c66dfb1e-a1e2-4773-901d-716fa0a400ec', NULL, NULL, 0, 'Ali', 0, 0, 1, 'Ben Salah', 0, NULL, NULL, NULL, NULL, NULL, 0, 0.0, 0, '2adf0f92-50c1-4cf5-bbdf-17b199313dec', 0, 'seller3'),
+                ('owner4', 0, 'b10fd30b-2d92-47cd-93c9-0692a7415c4e', NULL, NULL, 0, 'Sophie', 0, 0, 1, 'Martin', 0, NULL, NULL, NULL, NULL, NULL, 0, 0.0, 0, 'c65df75a-dea5-4455-9082-b58fcc577a58', 0, 'seller4'),
+                ('owner5', 0, '24b4b289-1ff4-42ff-be61-c08fec25ce6f', NULL, NULL, 0, 'David', 0, 0, 0, 'Smith', 0, NULL, NULL, NULL, NULL, NULL, 0, 0.0, 0, '7fc201a4-33eb-4f49-8603-7a6848fad102', 0, 'seller5'),
+                ('owner6', 0, 'e18697d0-5d70-4149-b0b2-5f451550ad8a', NULL, NULL, 0, 'Fatima', 0, 0, 1, 'El Amrani', 0, NULL, NULL, NULL, NULL, NULL, 0, 0.0, 0, '51eb85f6-cfa1-4cc8-a74a-ed3b907deab4', 0, 'seller6');
+            ");
 
             migrationBuilder.InsertData(
                 table: "Offers",
@@ -185,14 +170,6 @@ namespace projetNet.Migrations
                 table: "Vehicles",
                 keyColumn: "Id",
                 keyValue: new Guid("f578e7bf-f5dd-42d9-864c-3910740f748c"));
-
-            migrationBuilder.DropColumn(
-                name: "RefreshToken",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "RefreshTokenExpiryTime",
-                table: "AspNetUsers");
 
             migrationBuilder.InsertData(
                 table: "Vehicles",
