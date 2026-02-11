@@ -11,8 +11,8 @@ using projetNet.Data;
 namespace projetNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260210231332_RemoveOfferAddBookingType")]
-    partial class RemoveOfferAddBookingType
+    [Migration("20260211225010_nukeMigration")]
+    partial class nukeMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,6 +179,12 @@ namespace projetNet.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsPhoneVerified")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool?>("IsVerifiedSeller")
                         .HasColumnType("tinyint(1)");
 
@@ -217,6 +223,12 @@ namespace projetNet.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
+                    b.Property<double>("SellerRating")
+                        .HasColumnType("double");
+
+                    b.Property<int>("SellerReviewCount")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -234,6 +246,122 @@ namespace projetNet.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "owner1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a56a0daa-c987-477a-9cca-83e73acb1137",
+                            EmailConfirmed = false,
+                            FirstName = "Jean",
+                            IsEmailVerified = false,
+                            IsPhoneVerified = false,
+                            IsVerifiedSeller = true,
+                            LastName = "Dupont",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "e8564da5-2425-4ac2-b43a-b5ef0aa6cb86",
+                            SellerRating = 0.0,
+                            SellerReviewCount = 0,
+                            TwoFactorEnabled = false,
+                            UserName = "seller1"
+                        },
+                        new
+                        {
+                            Id = "owner2",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "4933c613-a503-4e9d-8cfd-f0fe07faf021",
+                            EmailConfirmed = false,
+                            FirstName = "Marie",
+                            IsEmailVerified = false,
+                            IsPhoneVerified = false,
+                            IsVerifiedSeller = false,
+                            LastName = "Curie",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "7aed8ed3-427f-4bfd-900e-a7fdaad1fcc8",
+                            SellerRating = 0.0,
+                            SellerReviewCount = 0,
+                            TwoFactorEnabled = false,
+                            UserName = "seller2"
+                        },
+                        new
+                        {
+                            Id = "owner3",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f293c519-30c1-449a-ab72-b43e92e07e0e",
+                            EmailConfirmed = false,
+                            FirstName = "Ali",
+                            IsEmailVerified = false,
+                            IsPhoneVerified = false,
+                            IsVerifiedSeller = true,
+                            LastName = "Ben Salah",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "833ca868-5819-41b8-87a9-31edec7e53de",
+                            SellerRating = 0.0,
+                            SellerReviewCount = 0,
+                            TwoFactorEnabled = false,
+                            UserName = "seller3"
+                        },
+                        new
+                        {
+                            Id = "owner4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a0322caa-0ea3-4b8b-b053-188e305522a2",
+                            EmailConfirmed = false,
+                            FirstName = "Sophie",
+                            IsEmailVerified = false,
+                            IsPhoneVerified = false,
+                            IsVerifiedSeller = true,
+                            LastName = "Martin",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "af495606-ef61-45ae-b7b5-dbee58535858",
+                            SellerRating = 0.0,
+                            SellerReviewCount = 0,
+                            TwoFactorEnabled = false,
+                            UserName = "seller4"
+                        },
+                        new
+                        {
+                            Id = "owner5",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f9e63342-62e5-4c3e-b1c0-7ab4a24f4224",
+                            EmailConfirmed = false,
+                            FirstName = "David",
+                            IsEmailVerified = false,
+                            IsPhoneVerified = false,
+                            IsVerifiedSeller = false,
+                            LastName = "Smith",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "4bbefd67-a8b9-4b55-9ef2-4c77e4349d5e",
+                            SellerRating = 0.0,
+                            SellerReviewCount = 0,
+                            TwoFactorEnabled = false,
+                            UserName = "seller5"
+                        },
+                        new
+                        {
+                            Id = "owner6",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "90c6cd0b-f0e8-4b5f-b530-6d37f58ee244",
+                            EmailConfirmed = false,
+                            FirstName = "Fatima",
+                            IsEmailVerified = false,
+                            IsPhoneVerified = false,
+                            IsVerifiedSeller = true,
+                            LastName = "El Amrani",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "6d123a2d-ccd3-4e36-9371-c3b350f72759",
+                            SellerRating = 0.0,
+                            SellerReviewCount = 0,
+                            TwoFactorEnabled = false,
+                            UserName = "seller6"
+                        });
                 });
 
             modelBuilder.Entity("projetNet.Models.Booking", b =>
@@ -256,6 +384,10 @@ namespace projetNet.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(65,30)");
 
@@ -274,18 +406,9 @@ namespace projetNet.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("InspectorId")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Report")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("ScheduledDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("Reason")
                         .HasColumnType("longtext");
 
                     b.Property<Guid>("VehicleId")
@@ -323,6 +446,80 @@ namespace projetNet.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Offers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("d377d3cc-ecf9-4bb2-8b21-2383874b811e"),
+                            Price = 15000m,
+                            SellerId = "owner1",
+                            Status = "accepted",
+                            Type = "Sale",
+                            VehicleId = new Guid("33df5f41-397e-4ec9-b83b-f36cd524e775")
+                        },
+                        new
+                        {
+                            Id = new Guid("021b8a8b-5958-47ee-841b-d062e604159a"),
+                            Price = 120m,
+                            SellerId = "owner2",
+                            Status = "accepted",
+                            Type = "Rent",
+                            VehicleId = new Guid("08101ea4-2e65-41eb-94cc-71b6009085c4")
+                        },
+                        new
+                        {
+                            Id = new Guid("d4e85c80-5585-493d-944d-8d120b799762"),
+                            Price = 9000m,
+                            SellerId = "owner3",
+                            Status = "accepted",
+                            Type = "Sale",
+                            VehicleId = new Guid("c30e3feb-6efc-45c8-b486-3627877cee7e")
+                        },
+                        new
+                        {
+                            Id = new Guid("54120a1b-6f8f-479e-bc99-88532acb4750"),
+                            Price = 80m,
+                            SellerId = "owner4",
+                            Status = "accepted",
+                            Type = "Rent",
+                            VehicleId = new Guid("19b6b5d8-5dc3-4e63-80c0-936c1662da58")
+                        },
+                        new
+                        {
+                            Id = new Guid("448f0507-996c-4de6-a1bb-95533124867c"),
+                            Price = 25000m,
+                            SellerId = "owner5",
+                            Status = "accepted",
+                            Type = "Sale",
+                            VehicleId = new Guid("ee31c0e5-ff8a-4782-aae5-4c71c3aa0cd1")
+                        },
+                        new
+                        {
+                            Id = new Guid("9f8d063d-db6f-4979-b216-fb80ba9da0f4"),
+                            Price = 100m,
+                            SellerId = "owner6",
+                            Status = "accepted",
+                            Type = "Rent",
+                            VehicleId = new Guid("9f8d0e13-9fc4-4236-9c97-b6846e66bece")
+                        },
+                        new
+                        {
+                            Id = new Guid("3a019b13-6826-44a6-92b6-4abfba9cc4f6"),
+                            Price = 8000m,
+                            SellerId = "owner3",
+                            Status = "rejected",
+                            Type = "Sale",
+                            VehicleId = new Guid("c30e3feb-6efc-45c8-b486-3627877cee7e")
+                        },
+                        new
+                        {
+                            Id = new Guid("30803699-3cd0-4ee2-bbba-83ca1adc5638"),
+                            Price = 60m,
+                            SellerId = "owner4",
+                            Status = "pending",
+                            Type = "Rent",
+                            VehicleId = new Guid("19b6b5d8-5dc3-4e63-80c0-936c1662da58")
+                        });
                 });
 
             modelBuilder.Entity("projetNet.Models.Vehicle", b =>
@@ -377,10 +574,10 @@ namespace projetNet.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e435f464-cb57-4033-91fe-b4c246ac0581"),
+                            Id = new Guid("33df5f41-397e-4ec9-b83b-f36cd524e775"),
                             Brand = "Toyota",
                             Description = "Reliable sedan, low mileage.",
-                            ImageUrl = "/images/cars/toyota_corolla.jpg",
+                            ImageUrl = "https://images.unsplash.com/photo-1511918984145-48bbd2aa2d4c?auto=format&fit=crop&w=400&q=80",
                             Location = "Paris",
                             Mileage = 12000,
                             Model = "Corolla",
@@ -391,10 +588,10 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0443f072-bd0c-4028-a7b6-e9f9f1c833ff"),
+                            Id = new Guid("08101ea4-2e65-41eb-94cc-71b6009085c4"),
                             Brand = "BMW",
                             Description = "Luxury SUV, fully loaded.",
-                            ImageUrl = "/images/cars/bmw_x5.jpg",
+                            ImageUrl = "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80",
                             Location = "Lyon",
                             Mileage = 8000,
                             Model = "X5",
@@ -405,10 +602,10 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c7fa6276-6d15-47f0-9d50-d9582b89b484"),
+                            Id = new Guid("c30e3feb-6efc-45c8-b486-3627877cee7e"),
                             Brand = "Renault",
                             Description = "Compact city car, economical.",
-                            ImageUrl = "/images/cars/renault_clio.jpg",
+                            ImageUrl = "https://images.unsplash.com/photo-1461632830798-3adb3034e4c8?auto=format&fit=crop&w=400&q=80",
                             Location = "Marseille",
                             Mileage = 20000,
                             Model = "Clio",
@@ -416,7 +613,74 @@ namespace projetNet.Migrations
                             Price = 9000m,
                             Vin = "VIN1122334455",
                             Year = 2020
+                        },
+                        new
+                        {
+                            Id = new Guid("19b6b5d8-5dc3-4e63-80c0-936c1662da58"),
+                            Brand = "Peugeot",
+                            Description = "Brand new, perfect for city driving.",
+                            ImageUrl = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
+                            Location = "Nice",
+                            Mileage = 500,
+                            Model = "208",
+                            OwnerId = "owner4",
+                            Price = 12000m,
+                            Vin = "VIN5566778899",
+                            Year = 2023
+                        },
+                        new
+                        {
+                            Id = new Guid("ee31c0e5-ff8a-4782-aae5-4c71c3aa0cd1"),
+                            Brand = "Mercedes",
+                            Description = "Elegant and comfortable, well maintained.",
+                            ImageUrl = "https://images.unsplash.com/photo-1502877336888-7bfc88a5e4a0?auto=format&fit=crop&w=400&q=80",
+                            Location = "Bordeaux",
+                            Mileage = 30000,
+                            Model = "C-Class",
+                            OwnerId = "owner5",
+                            Price = 25000m,
+                            Vin = "VIN9988776655",
+                            Year = 2019
+                        },
+                        new
+                        {
+                            Id = new Guid("9f8d0e13-9fc4-4236-9c97-b6846e66bece"),
+                            Brand = "Volkswagen",
+                            Description = "Popular hatchback, great for families.",
+                            ImageUrl = "https://images.unsplash.com/photo-1519643381400-7f7c7d3e0c44?auto=format&fit=crop&w=400&q=80",
+                            Location = "Toulouse",
+                            Mileage = 15000,
+                            Model = "Golf",
+                            OwnerId = "owner6",
+                            Price = 14000m,
+                            Vin = "VIN4455667788",
+                            Year = 2021
                         });
+                });
+
+            modelBuilder.Entity("projetNet.Models.VehiculeSale", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("BuyerId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("OfferId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VehiculeSales");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -21,19 +21,19 @@ using projetNet.Services.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite");
-if (useSqlite)
-{
-    var dbPath = Path.Combine(builder.Environment.ContentRootPath, "app.db");
-    var sqliteConn = $"Data Source={dbPath}";
-    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(sqliteConn));
-}
-else
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-}
+//var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite");
+//if (useSqlite)
+//{
+    //var dbPath = Path.Combine(builder.Environment.ContentRootPath, "app.db");
+    //var sqliteConn = $"Data Source={dbPath}";
+    //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(sqliteConn));
+//}
+//else
+//{
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+//}
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Configure Identity

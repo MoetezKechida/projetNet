@@ -1,24 +1,19 @@
-@model IEnumerable<dynamic>
+@model IEnumerable<projetNet.Models.Vehicle>
 @{
     ViewData["Title"] = "Car Listings";
 }
 <h2>Available Cars</h2>
 <div class="row">
-    @foreach (var item in Model)
+    @foreach (var vehicle in Model)
     {
-        var vehicle = item.Vehicle;
-        var offer = item.Offer;
-        var seller = item.Seller;
         <div class="col-md-4 mb-4">
             <div class="card h-100">
                 <img src="@(!string.IsNullOrEmpty(vehicle.ImageUrl) ? vehicle.ImageUrl : "https://images.unsplash.com/photo-1511918984145-48bbd2aa2d4c?auto=format&fit=crop&w=400&q=80")" class="card-img-top" alt="@vehicle.Model" style="height:200px;object-fit:cover;">
                 <div class="card-body">
                     <h5 class="card-title">@vehicle.Brand @vehicle.Model</h5>
-                    <p class="card-text">Price: <span class="badge bg-success">@string.Format("{0:F2}", offer.Price) €</span></p>
+                    <p class="card-text">Price: <span class="badge bg-success">@string.Format("{0:F2}", vehicle.Price) €</span></p>
                     <p class="card-text">Year: @vehicle.Year</p>
                     <p class="card-text">@vehicle.Description</p>
-                    <p class="card-text">Offer Type: <span class="badge bg-info">@offer.Type</span></p>
-                    <p class="card-text">Seller: <span class="badge @(seller?.IsVerifiedSeller == true ? "bg-success" : "bg-secondary")">@seller?.FirstName @seller?.LastName (@(seller?.IsVerifiedSeller == true ? "Verified" : "Not Verified"))</span></p>
                     <a href="@Url.Action("Preview", "VehicleListing", new { id = vehicle.Id })" class="btn btn-primary">Preview</a>
                 </div>
             </div>
