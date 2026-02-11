@@ -7,13 +7,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using projetNet.Data;
+using projetNet.Helpers;
 using projetNet.Models;
 using projetNet.Services.ServiceContracts;
 
 namespace projetNet.Controllers
 {
-    
+
     public class VendeurController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,20 +23,23 @@ namespace projetNet.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IImageService _imageService;
         private readonly ILogger<VendeurController> _logger;
+        private readonly IInspectionService _inspectionService;
 
-        public VendeurController(ApplicationDbContext context,  IVehicleService vehicleService,
-                                UserManager<ApplicationUser> userManager, IImageService imageService,  ILogger<VendeurController> logger)
+        public VendeurController(ApplicationDbContext context, IVehicleService vehicleService,
+            UserManager<ApplicationUser> userManager, IImageService imageService,
+            ILogger<VendeurController> logger, IInspectionService inspectionService)
         {
             _context = context;
             _vehicleService = vehicleService;
             _userManager = userManager;
             _imageService = imageService;
             _logger = logger;
-            
+            _inspectionService = inspectionService;
+
         }
 
         // GET: Vehicle
-        
+
 
         public async Task<IActionResult> UserVehicle(string status)
         {
@@ -56,13 +61,13 @@ namespace projetNet.Controllers
 
             return View(vehicles);
         }
-        
-        
+
+
 
         // GET: Vehicle/Create
         public IActionResult Create()
         {
-            
+            ViewBag.Brands = VehicleData.GetBrands();
             return View();
         }
 
@@ -72,10 +77,18 @@ namespace projetNet.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")] Vehicle vehicle, IFormFile? imageFile)
+        public async Task<IActionResult> Create(
+            [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")]
+            Vehicle vehicle,
+            IFormFile? imageFile)
         {
+            
+                
+            ViewBag.Brands = VehicleData.GetBrands();
+            
+            
             var ownerId = _userManager.GetUserId(User);
-
+            
             try
             {
                 if (imageFile != null && imageFile.Length > 0)
@@ -87,7 +100,7 @@ namespace projetNet.Controllers
                         "vehicles"
                     );
                 }
-
+                
                 await _vehicleService.CreateAsync(vehicle, ownerId);
                 return RedirectToAction(nameof(UserVehicle));
             }
@@ -113,6 +126,7 @@ namespace projetNet.Controllers
             {
                 return NotFound();
             }
+
             return View(vehicle);
         }
 
@@ -123,7 +137,8 @@ namespace projetNet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             Guid id,
-            [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")] Vehicle vehicle,
+            [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")]
+            Vehicle vehicle,
             IFormFile? imageFile)
         {
             try
@@ -201,9 +216,20 @@ namespace projetNet.Controllers
             return RedirectToAction(nameof(UserVehicle));
         }
 
-        private bool VehicleExists(Guid id)
+
+
+
+        public async Task<IActionResult> Reason(Guid id)
         {
-            return _context.Vehicles.Any(e => e.Id == id);
+            var inspections = await _inspectionService.GetByVehicleIdAsync(id);
+            var inspection = inspections.FirstOrDefault();
+            var vehicle = await _vehicleService.GetByIdAsync(id);
+            ViewBag.inspection = inspection;
+            ViewBag.vehicle = vehicle;
+            return View();
         }
+
+
     }
 }
+

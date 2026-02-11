@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace projetNet.Models;
 
 public class Vehicle
@@ -9,16 +11,14 @@ public class Vehicle
     public int Year { get; set; }
     public required string OwnerId { get; set; }
     public string? ImageUrl { get; set; }
+
     public decimal? Price { get; set; }
-    
     public decimal? RentalPrice { get; set; }
-    
+
     public string? Description { get; set; }
     public int? Mileage { get; set; }
     public string? Location { get; set; }
     public string? Status  { get; set; }
-    
-    
-    
+
     
 }
