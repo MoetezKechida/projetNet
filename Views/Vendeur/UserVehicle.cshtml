@@ -37,6 +37,20 @@ else
         {
             <div class="col">
                 <div class="card shadow-sm h-100">
+                    @if (!string.IsNullOrEmpty(item.Status))
+                    {
+                        var badgeColor = item.Status.ToLower() switch
+                        {
+                            "pending" => "bg-warning text-dark",
+                            "accepted" => "bg-success text-white",
+                            "declined" => "bg-danger text-white",
+                            
+                        };
+                        <span class="badge position-absolute top-0 start-0 m-2 @badgeColor" style="font-size:0.8rem;">
+                            @item.Status
+                        </span>
+                    }
+                    
                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
                         <img src="@item.ImageUrl" class="card-img" alt="Vehicle Image"
@@ -48,16 +62,18 @@ else
                             <strong>VIN:</strong> @item.Vin <br/>
                             @if (item.Price != null)
                             {
-                                <strong>Price: @item.Price.Value.ToString("0.##") Dt</strong>  <br />
+                                <strong>Price: @item.Price.Value.ToString("0.##") Dt</strong>
+                                <br/>
                             }
 
                             @if (item.RentalPrice != null)
                             {
-                                <strong>Rental Price: @item.RentalPrice.Value.ToString("0.##") Dt </strong> <br />
+                                <strong>Rental Price: @item.RentalPrice.Value.ToString("0.##") Dt </strong>
+                                <br/>
                             }
                             <strong>Mileage:</strong> @item.Mileage km<br/>
                             <strong>Location:</strong> @item.Location <br/>
-                            <strong>Status:</strong> @item.Status <br/>
+                            
                             <strong>Description:</strong> @item.Description
                         </p>
                     </div>
