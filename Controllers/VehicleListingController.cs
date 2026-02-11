@@ -44,19 +44,51 @@ namespace projetNet.Controllers
         }
 
         [HttpPost]
-        public IActionResult Rent(Guid VehicleId, string Name, string Email, int RentalDays)
+        public IActionResult Rent(Guid VehicleId, DateTime StartDate, DateTime EndDate)
         {
-            // TODO: Save rent request to database or send email
-            TempData["Message"] = $"Rent request submitted for {RentalDays} days by {Name}.";
+            var offer = _context.Offers.FirstOrDefault(o => o.VehicleId == VehicleId && o.Status == "accepted" && o.Type == "Rent");
+            if (offer == null)
+            {
+                TempData["Message"] = "No valid rent offer found.";
+                return RedirectToAction("Preview", new { id = VehicleId });
+            }
+            var buyerId = User.Identity?.Name ?? "demoBuyer";
+            var days = (EndDate - StartDate).Days;
+            var totalAmount = days * offer.Price;
+            var booking = new Booking
+            {
+                Id = Guid.NewGuid(),
+                OfferId = offer.Id,
+                BuyerId = buyerId,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                TotalAmount = totalAmount,
+                Status = "attempt"
+            };
+            _context.Bookings.Add(booking);
+            _context.SaveChanges();
+            TempData["Message"] = $"Rent request submitted for {days} days.";
             return RedirectToAction("Preview", new { id = VehicleId });
         }
 
         [HttpPost]
-        public IActionResult Buy(Guid VehicleId, string Name, string Email, string Phone)
+        public IActionResult Buy(Guid OfferId, decimal Amount)
         {
-            // TODO: Save buy request to database or send email
-            TempData["Message"] = $"Buy request submitted by {Name}.";
-            return RedirectToAction("Preview", new { id = VehicleId });
+            // For demo, use logged-in user as buyer
+            var buyerId = User.Identity?.Name ?? "demoBuyer";
+            var vehiculeSale = new VehiculeSale
+            {
+                Id = Guid.NewGuid(),
+                OfferId = OfferId,
+                BuyerId = buyerId,
+                Amount = Amount,
+                Status = "attempt"
+            };
+            _context.VehiculeSales.Add(vehiculeSale);
+            _context.SaveChanges();
+            TempData["Message"] = $"Buy request submitted with price {Amount:F2} €.";
+            var offer = _context.Offers.FirstOrDefault(o => o.Id == OfferId);
+            return RedirectToAction("Preview", new { id = offer?.VehicleId });
         }
     }
 }

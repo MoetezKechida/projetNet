@@ -1,0 +1,32 @@
+@model projetNet.Models.Offer
+@{
+    ViewData["Title"] = "Create Offer";
+}
+<h2>Create Offer</h2>
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <label>Type</label>
+        <select asp-for="Type" class="form-control">
+            <option value="Sale">Sale</option>
+            <option value="Rent">Rent</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Price</label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label>Vehicle</label>
+        <select asp-for="VehicleId" class="form-control">
+            <option value="">-- Select Vehicle --</option>
+            @foreach (var v in ViewBag.Vehicles)
+            {
+                <option value="@v.Id">@v.Brand @v.Model (@v.Year)</option>
+            }
+        </select>
+        <span asp-validation-for="VehicleId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Create</button>
+</form>

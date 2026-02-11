@@ -53,7 +53,8 @@ namespace projetNet.Controllers
         public async Task<IActionResult> Create()
         {
             var user = await _userManager.GetUserAsync(User);
-            return View(user.Id);
+            //return View(user.Id);
+            return View();
         }
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -72,11 +73,12 @@ namespace projetNet.Controllers
             try
             {
                 var created = await _offerService.CreateAsync(offer);
-                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(offer);
             }
         }
 

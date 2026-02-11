@@ -1,0 +1,80 @@
+@model projetNet.Models.OfferDetailsViewModel
+@{
+    ViewData["Title"] = "Offer Details";
+}
+<h2>Offer Details</h2>
+<div class="card mb-3">
+    <div class="card-body">
+        <h5>Type: @Model.Offer.Type</h5>
+        <h5>Status: @Model.Offer.Status</h5>
+        <h5>Vehicle: @Model.Vehicle.Brand @Model.Vehicle.Model</h5>
+    </div>
+</div>
+@if (Model.Offer.Type == "Rent")
+{
+    <h3>Bookings</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Buyer</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model.Bookings)
+            {
+                <tr>
+                    <td>@booking.BuyerId</td>
+                    <td>@booking.StartDate.ToShortDateString()</td>
+                    <td>@booking.EndDate.ToShortDateString()</td>
+                    <td>@booking.TotalAmount</td>
+                    <td>@booking.Status</td>
+                    <td>
+                        @if (booking.Status == "attempt")
+                        {
+                            <form method="post" action="@Url.Action("ConfirmBooking", "Profile")">
+                                <input type="hidden" name="bookingId" value="@booking.Id" />
+                                <button type="submit" class="btn btn-success btn-sm">Confirm</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (Model.Offer.Type == "Sale")
+{
+    <h3>Sale Attempts</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Buyer</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var sale in Model.Sales)
+            {
+                <tr>
+                    <td>@sale.BuyerId</td>
+                    <td>@sale.Amount</td>
+                    <td>@sale.Status</td>
+                    <td>
+                        @if (sale.Status == "attempt")
+                        {
+                            <form method="post" action="@Url.Action("ConfirmSale", "Profile")">
+                                <input type="hidden" name="saleId" value="@sale.Id" />
+                                <button type="submit" class="btn btn-success btn-sm">Confirm</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

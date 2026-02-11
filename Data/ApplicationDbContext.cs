@@ -48,4 +48,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Offer> Offers { get; set; } = null!;
     public DbSet<Inspection> Inspections { get; set; } = null!;
     public DbSet<Booking> Bookings { get; set; } = null!;
+    public DbSet<VehiculeSale> VehiculeSales { get; set; } = null!;
 }

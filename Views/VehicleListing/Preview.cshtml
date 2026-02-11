@@ -27,7 +27,7 @@
                 }
                 @if (Model.Offer.Type == "Sale")
                 {
-                    <button class="btn btn-primary" onclick="showBuyPrompt();">Buy</button>
+                    <button class="btn btn-primary" onclick="document.getElementById('buyForm').style.display='block';">Buy</button>
                 }
             </div>
             @if (Model.Offer.Type == "Rent")
@@ -46,9 +46,23 @@
                     <button type="submit" class="btn btn-success">Submit Rent Request</button>
                 </form>
             }
+            @if (Model.Offer.Type == "Sale")
+            {
+                <form id="buyForm" action="/VehicleListing/Buy" method="post" style="display:none;margin-top:20px;" onsubmit="return showBuyPrompt();">
+                    <h5>Buy this car</h5>
+                    <input type="hidden" name="OfferId" value="@Model.Offer.Id" />
+                    <div class="mb-2">
+                        <label>Your Price:</label>
+                        <input type="number" name="Amount" class="form-control" min="1" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Buy Request</button>
+                </form>
+            }
             <script>
                 function showBuyPrompt() {
                     alert('Your buying request has been registered, the seller will contact you soon');
+                    document.getElementById('buyForm').style.display = 'none';
+                    return false;
                 }
                 function showRentPrompt() {
                     alert('Your rent request has been registered!');
