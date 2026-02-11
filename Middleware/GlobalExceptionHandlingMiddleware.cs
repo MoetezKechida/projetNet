@@ -36,10 +36,8 @@ public class GlobalExceptionHandlingMiddleware
 
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        // Log the exception
         _logger.LogError(exception, "An error occurred: {Message}", exception.Message);
         
-        // Create error response based on exception type
         var errorResponse = exception switch
         {
             NotFoundException notFound => new ErrorResponse
@@ -87,11 +85,9 @@ public class GlobalExceptionHandlingMiddleware
             }
         };
         
-        // Set response status code and content type
         context.Response.StatusCode = errorResponse.Status;
         context.Response.ContentType = "application/json";
         
-        // Serialize and write response
         var options = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase

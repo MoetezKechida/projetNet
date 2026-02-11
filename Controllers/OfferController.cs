@@ -1,153 +1,101 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using projetNet.Data;
 using projetNet.Models;
 using projetNet.Services.ServiceContracts;
 
 namespace projetNet.Controllers
 {
+    [Authorize]
     public class OfferController : Controller
     {
         private readonly IOfferService _offerService;
+        private readonly IVehicleService _vehicleService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ApplicationDbContext _context;
 
-        public OfferController(ApplicationDbContext context, IOfferService offerService, UserManager<ApplicationUser> userManager)
+        public OfferController(
+            IOfferService offerService,
+            IVehicleService vehicleService,
+            UserManager<ApplicationUser> userManager)
         {
-            _context = context;
             _offerService = offerService;
+            _vehicleService = vehicleService;
             _userManager = userManager;
         }
 
         // GET: Offer
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Offers.ToListAsync());
+            var userId = _userManager.GetUserId(User);
+            var offers = await _offerService.GetBySellerIdAsync(userId!);
+            return View(offers);
         }
 
         // GET: Offer/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var offer = await _context.Offers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (offer == null)
-            {
-                return NotFound();
-            }
-
+            var offer = await _offerService.GetByIdAsync(id);
+            if (offer == null) return NotFound();
             return View(offer);
         }
 
         // GET: Offer/Create
         public async Task<IActionResult> Create()
         {
-            var user = await _userManager.GetUserAsync(User);
-            //return View(user.Id);
+            var userId = _userManager.GetUserId(User);
+            var vehicles = await _vehicleService.GetByOwnerIdAsync(userId!);
+            ViewData["VehicleId"] = new SelectList(vehicles, "Id", "Brand");
             return View();
         }
-        public async Task<IActionResult> GetById(Guid id)
-        {
-            var offer = await _offerService.GetByIdAsync(id);
-            if (offer == null)
-                return NotFound();
-            return Ok(offer);
-        }
+
         // POST: Offer/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Type,Price,Status,VehicleId,SellerId")] Offer offer)
+        public async Task<IActionResult> Create([Bind("Type,Price,Status,VehicleId")] Offer offer)
         {
-            try
-            {
-                var created = await _offerService.CreateAsync(offer);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return View(offer);
-            }
+            var userId = _userManager.GetUserId(User);
+            offer.SellerId = userId!;
+            await _offerService.CreateAsync(offer);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Offer/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var offer = await _offerService.GetByIdAsync(id);
+            if (offer == null) return NotFound();
 
-            var offer = await _context.Offers.FindAsync(id);
-            if (offer == null)
-            {
-                return NotFound();
-            }
+            var userId = _userManager.GetUserId(User);
+            var vehicles = await _vehicleService.GetByOwnerIdAsync(userId!);
+            ViewData["VehicleId"] = new SelectList(vehicles, "Id", "Brand", offer.VehicleId);
             return View(offer);
         }
 
         // POST: Offer/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Type,Price,Status,VehicleId,SellerId")] Offer offer)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Type,Price,Status,VehicleId")] Offer offer)
         {
-            if (id != offer.Id)
-            {
-                return NotFound();
-            }
+            if (id != offer.Id) return NotFound();
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(offer);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OfferExists(offer.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(offer);
+            var existing = await _offerService.GetByIdAsync(id);
+            if (existing == null) return NotFound();
+
+            existing.Type = offer.Type;
+            existing.Price = offer.Price;
+            existing.Status = offer.Status;
+            existing.VehicleId = offer.VehicleId;
+
+            await _offerService.UpdateAsync(existing);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Offer/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var offer = await _context.Offers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (offer == null)
-            {
-                return NotFound();
-            }
-
+            var offer = await _offerService.GetByIdAsync(id);
+            if (offer == null) return NotFound();
             return View(offer);
         }
 
@@ -156,19 +104,8 @@ namespace projetNet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var offer = await _context.Offers.FindAsync(id);
-            if (offer != null)
-            {
-                _context.Offers.Remove(offer);
-            }
-
-            await _context.SaveChangesAsync();
+            await _offerService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool OfferExists(Guid id)
-        {
-            return _context.Offers.Any(e => e.Id == id);
         }
     }
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +12,7 @@ using projetNet.Services.ServiceContracts;
 namespace projetNet.Controllers
 {
 
+    [Authorize]
     public class VendeurController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -232,4 +229,3 @@ namespace projetNet.Controllers
 
     }
 }
-
