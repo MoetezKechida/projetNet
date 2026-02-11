@@ -1,0 +1,89 @@
+@model IEnumerable<projetNet.Models.Vehicle>
+
+@{
+    ViewData["Title"] = "Vehicles";
+    var brands = ViewBag.Brands as List<string>;
+    var chosenBrand = ViewBag.ChosenBrand;
+}
+
+<h1 class="mb-4">Vehicles</h1>
+
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <label class="form-label fw-bold">Filter by brand</label>
+        <select class="form-select" onchange="filterByBrand(this)">
+            <option value="" selected="@(string.IsNullOrEmpty(chosenBrand))">
+                All brands
+            </option>
+
+            @foreach (var brand in brands ?? new List<string>())
+            {
+                <option value="@brand" selected="@(brand == chosenBrand)">
+                    @brand
+                </option>
+            }
+        </select>
+    </div>
+</div>
+
+<script>
+    function filterByBrand(select) {
+        const brand = select.value;
+
+        if (brand) {
+            window.location.href = `/Inspector/Index?brand=${brand}`;
+        } else {
+            window.location.href = `/Inspector/Index`;
+        }
+    }
+</script>
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        There are no vehicles for inspection.
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" class="card-img" alt="Vehicle Image"
+                             style="object-fit: contain; width: 100%; height: 100%; background-color: #f8f9fa;">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Brand @item.Model (@item.Year)</h5>
+                        <p class="card-text">
+                            <strong>VIN:</strong> @item.Vin <br/>
+
+                            <strong>Price:</strong> @item.Price?.ToString("0.##") Dt <br/>
+                            <strong>Rental Price:</strong> @item.RentalPrice?.ToString("0.##") Dt <br/>
+                            <strong>Mileage:</strong> @item.Mileage <br/>
+                            <strong>Location:</strong> @item.Location <br/>
+                            <strong>Description:</strong> @item.Description
+                        </p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a asp-action="Accept"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-success"
+                           onclick="return confirm('Are you sure you want to accept this vehicle?');">
+                            Accept
+                        </a>
+
+                        <a asp-action="Create"
+                           asp-route-vehicleId="@item.Id"
+                           class="btn btn-sm btn-danger">
+                            Decline
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

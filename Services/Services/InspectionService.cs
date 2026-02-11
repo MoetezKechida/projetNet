@@ -9,15 +9,18 @@ public class InspectionService : IInspectionService
     private readonly IInspectionRepository _inspectionRepository;
     private readonly IVehicleRepository _vehicleRepository;
     private readonly IAuditLogRepository _auditLogRepository;
+    private readonly IVehicleService _vehicleService;
 
     public InspectionService(
         IInspectionRepository inspectionRepository,
         IVehicleRepository vehicleRepository,
-        IAuditLogRepository auditLogRepository)
+        IAuditLogRepository auditLogRepository,
+        IVehicleService vehicleService)
     {
         _inspectionRepository = inspectionRepository;
         _vehicleRepository = vehicleRepository;
         _auditLogRepository = auditLogRepository;
+        _vehicleService = vehicleService;
     }
 
     public async Task<Inspection?> GetByIdAsync(Guid id)
@@ -39,43 +42,43 @@ public class InspectionService : IInspectionService
     {
         return await _inspectionRepository.GetByInspectorIdAsync(inspectorId);
     }
-
-    public async Task<IEnumerable<Inspection>> GetPendingInspectionsAsync()
+    
+    public async Task<Inspection> CreateAsync(Guid vehicleId, string inspectorId, string reason)
     {
-        return await _inspectionRepository.GetPendingInspectionsAsync();
-    }
-
-    public async Task<Inspection> ScheduleInspectionAsync(Inspection inspection)
-    {
-        // Validate vehicle exists
-        var vehicleExists = await _vehicleRepository.ExistsAsync(inspection.VehicleId);
-        if (!vehicleExists)
-        {
-            throw new KeyNotFoundException($"Vehicle with ID {inspection.VehicleId} not found.");
-        }
-
-        // Validate scheduled date is in the future
-        if (inspection.ScheduledDate <= DateTime.UtcNow)
-        {
-            throw new ArgumentException("Scheduled date must be in the future.");
-        }
-
-        inspection.Status = "Pending";
-        inspection.Report = string.Empty;
         
-        var result = await _inspectionRepository.AddAsync(inspection);
+        var inspection = new Inspection
+        {
+            Id = Guid.NewGuid(),        // generate a new ID
+            VehicleId = vehicleId,      // vehicle ID from controller
+            InspectorId = inspectorId,  // inspector from logged-in user
+            Reason = reason,            // reason from form
+            
+        };
 
-        // Log the action
+       
+        var result = await _inspectionRepository.AddAsync(inspection);
+        
+        var vehicle = await _vehicleService.GetByIdAsync(vehicleId);
+        if (vehicle != null)
+        {
+            vehicle.Status = "declined";
+            await _vehicleService.UpdateAsync(vehicle); // save status change
+        }
+        
         await _auditLogRepository.AddAsync(new AuditLog
         {
-            UserId = inspection.InspectorId,
-            Action = "Schedule Inspection",
+            UserId = inspectorId,
+            Action = "Create Inspection",
             EntityType = "Inspection",
             Timestamp = DateTime.UtcNow
         });
 
         return result;
     }
+
+    
+
+    
 
     public async Task UpdateInspectionAsync(Inspection inspection)
     {
@@ -91,33 +94,7 @@ public class InspectionService : IInspectionService
         });
     }
 
-    public async Task CompleteInspectionAsync(Guid id, string report)
-    {
-        var inspection = await _inspectionRepository.GetByIdAsync(id);
-        if (inspection == null)
-        {
-            throw new KeyNotFoundException($"Inspection with ID {id} not found.");
-        }
-
-        if (string.IsNullOrWhiteSpace(report))
-        {
-            throw new ArgumentException("Report cannot be empty.");
-        }
-
-        inspection.Status = "Completed";
-        inspection.Report = report;
-        
-        await _inspectionRepository.UpdateAsync(inspection);
-
-        // Log the action
-        await _auditLogRepository.AddAsync(new AuditLog
-        {
-            UserId = inspection.InspectorId,
-            Action = "Complete Inspection",
-            EntityType = "Inspection",
-            Timestamp = DateTime.UtcNow
-        });
-    }
+    
 
     public async Task DeleteAsync(Guid id)
     {

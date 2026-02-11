@@ -208,6 +208,12 @@ namespace projetNet.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
@@ -357,6 +363,50 @@ namespace projetNet.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Vehicles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6f3998ca-00a6-449b-bff4-aedbf0022c06"),
+                            Brand = "Toyota",
+                            Description = "Reliable sedan, low mileage.",
+                            ImageUrl = "/images/cars/toyota_corolla.jpg",
+                            Location = "Paris",
+                            Mileage = 12000,
+                            Model = "Corolla",
+                            OwnerId = "owner1",
+                            Price = 15000m,
+                            Vin = "VIN1234567890",
+                            Year = 2022
+                        },
+                        new
+                        {
+                            Id = new Guid("d069617a-dfef-440c-9941-1edd78389bf8"),
+                            Brand = "BMW",
+                            Description = "Luxury SUV, fully loaded.",
+                            ImageUrl = "/images/cars/bmw_x5.jpg",
+                            Location = "Lyon",
+                            Mileage = 8000,
+                            Model = "X5",
+                            OwnerId = "owner2",
+                            Price = 35000m,
+                            Vin = "VIN0987654321",
+                            Year = 2021
+                        },
+                        new
+                        {
+                            Id = new Guid("dafa8df5-8bee-460c-9001-5bc949888c20"),
+                            Brand = "Renault",
+                            Description = "Compact city car, economical.",
+                            ImageUrl = "/images/cars/renault_clio.jpg",
+                            Location = "Marseille",
+                            Mileage = 20000,
+                            Model = "Clio",
+                            OwnerId = "owner3",
+                            Price = 9000m,
+                            Vin = "VIN1122334455",
+                            Year = 2020
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

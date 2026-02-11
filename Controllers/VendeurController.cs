@@ -14,40 +14,49 @@ using projetNet.Services.ServiceContracts;
 namespace projetNet.Controllers
 {
     
-    public class VehicleController : Controller
+    public class VendeurController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IVehicleService _vehicleService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IImageService _imageService;
+        private readonly ILogger<VendeurController> _logger;
 
-        public VehicleController(ApplicationDbContext context,  IVehicleService vehicleService, UserManager<ApplicationUser> userManager)
+        public VendeurController(ApplicationDbContext context,  IVehicleService vehicleService,
+                                UserManager<ApplicationUser> userManager, IImageService imageService,  ILogger<VendeurController> logger)
         {
             _context = context;
             _vehicleService = vehicleService;
             _userManager = userManager;
+            _imageService = imageService;
+            _logger = logger;
             
         }
 
         // GET: Vehicle
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Vehicles.ToListAsync());
-        }
+        
 
-        public async Task<IActionResult> UserVehicle()
+        public async Task<IActionResult> UserVehicle(string status)
         {
-            var vehicles = await _vehicleService.GetByOwnerIdAsync(_userManager.GetUserId(User));
+            var ownerId = _userManager.GetUserId(User);
+
+            IEnumerable<Vehicle> vehicles;
+
+            if (string.IsNullOrEmpty(status))
+            {
+                vehicles = await _vehicleService.GetByOwnerIdAsync(ownerId);
+            }
+            else
+            {
+                vehicles = await _vehicleService.GetByStatusAndOwnerAsync(status, ownerId);
+            }
+
+            ViewBag.Statuses = new List<string> { "pending", "declined", "accepted" };
+            ViewBag.SelectedStatus = status;
+
             return View(vehicles);
         }
-        // GET: Vehicle/Details/5
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var vehicle = await _vehicleService.GetByIdAsync(id);
-            if (vehicle == null)
-                return NotFound();
-
-            return View(vehicle);
-        }
+        
         
 
         // GET: Vehicle/Create
@@ -63,22 +72,31 @@ namespace projetNet.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Vin,Brand,Year")] Vehicle vehicle)
+        public async Task<IActionResult> Create( [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")] Vehicle vehicle, IFormFile? imageFile)
         {
             var ownerId = _userManager.GetUserId(User);
+
             try
             {
-                var created = await _vehicleService.CreateAsync(vehicle, ownerId);
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    await using var stream = imageFile.OpenReadStream();
+                    vehicle.ImageUrl = await _imageService.UploadImageAsync(
+                        stream,
+                        imageFile.FileName,
+                        "vehicles"
+                    );
+                }
 
-                // Redirect to Index action (list of vehicles)
+                await _vehicleService.CreateAsync(vehicle, ownerId);
                 return RedirectToAction(nameof(UserVehicle));
             }
             catch (Exception ex)
             {
-                // Return to the Create view with the model and error message
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View(vehicle);
             }
+
         }
 
 
@@ -103,7 +121,10 @@ namespace projetNet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Vin,Brand,Year")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(
+            Guid id,
+            [Bind("Vin,Brand,Year,Model,Price,RentalPrice,Mileage,Location,Description")] Vehicle vehicle,
+            IFormFile? imageFile)
         {
             try
             {
@@ -111,15 +132,35 @@ namespace projetNet.Controllers
                 if (existingVehicle == null)
                     return NotFound();
 
-                // Update only the properties you allow
                 existingVehicle.Vin = vehicle.Vin;
                 existingVehicle.Brand = vehicle.Brand;
                 existingVehicle.Year = vehicle.Year;
-                // OwnerId stays intact
+                existingVehicle.Model = vehicle.Model;
+                existingVehicle.Price = vehicle.Price;
+                existingVehicle.RentalPrice = vehicle.RentalPrice;
+                existingVehicle.Status = "pending";
+                existingVehicle.Mileage = vehicle.Mileage;
+                existingVehicle.Location = vehicle.Location;
+                existingVehicle.Description = vehicle.Description;
+
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    // Optional: delete old image
+                    if (!string.IsNullOrEmpty(existingVehicle.ImageUrl))
+                    {
+                        await _imageService.DeleteImageAsync(existingVehicle.ImageUrl);
+                    }
+
+                    await using var stream = imageFile.OpenReadStream();
+                    existingVehicle.ImageUrl = await _imageService.UploadImageAsync(
+                        stream,
+                        imageFile.FileName,
+                        "vehicles"
+                    );
+                }
 
                 await _vehicleService.UpdateAsync(existingVehicle);
                 return RedirectToAction(nameof(UserVehicle));
-
             }
             catch (Exception ex)
             {

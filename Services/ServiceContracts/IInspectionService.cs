@@ -8,9 +8,9 @@ public interface IInspectionService
     Task<IEnumerable<Inspection>> GetAllAsync();
     Task<IEnumerable<Inspection>> GetByVehicleIdAsync(Guid vehicleId);
     Task<IEnumerable<Inspection>> GetByInspectorIdAsync(string inspectorId);
-    Task<IEnumerable<Inspection>> GetPendingInspectionsAsync();
-    Task<Inspection> ScheduleInspectionAsync(Inspection inspection);
+
+    Task<Inspection> CreateAsync(Guid vehicleId, string inspectorId, string reason);
     Task UpdateInspectionAsync(Inspection inspection);
-    Task CompleteInspectionAsync(Guid id, string report);
+    
     Task DeleteAsync(Guid id);
 }

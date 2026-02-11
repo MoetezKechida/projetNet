@@ -10,5 +10,5 @@ public class Booking
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public decimal TotalAmount { get; set; }
-    
+    public string Status { get; set; } = "attempt";
 }

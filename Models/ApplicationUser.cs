@@ -10,8 +10,8 @@ public class ApplicationUser : IdentityUser
     public bool? IsVerifiedSeller { get; set; }
     public bool IsEmailVerified { get; set; }
     public bool IsPhoneVerified { get; set; }
-    
     public double SellerRating { get; set; }
     public int SellerReviewCount { get; set; }
-
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; }
 }

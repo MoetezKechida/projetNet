@@ -47,4 +47,3 @@ public class ValidationException : Exception
 public class BusinessRuleViolationException : Exception
 {
     public BusinessRuleViolationException(string message) : base(message) { }
-}
