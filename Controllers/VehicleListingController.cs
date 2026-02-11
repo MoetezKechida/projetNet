@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using projetNet.Models;
 using projetNet.Data;
+using projetNet.DTOs.Common;
 using System.Linq;
 
 namespace projetNet.Controllers
@@ -22,30 +24,23 @@ namespace projetNet.Controllers
         }
 
         // GET: /VehicleListing/Preview/5
-        public IActionResult Preview(Guid id)
+        public async Task<IActionResult> Preview(Guid id)
         {
-            var vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == id);
+            var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.Id == id);
             if (vehicle == null)
             {
                 return NotFound();
             }
-            return View(vehicle);
-        }
 
-        [HttpPost]
-        public IActionResult Rent(Guid VehicleId, string Name, string Email, int RentalDays)
-        {
-            // TODO: Save rent request to database or send email
-            TempData["Message"] = $"Rent request submitted for {RentalDays} days by {Name}.";
-            return RedirectToAction("Preview", new { id = VehicleId });
-        }
+            var viewModel = new VehiclePreviewViewModel
+            {
+                Vehicle = vehicle,
+                HasSalePrice = vehicle.Price.HasValue && vehicle.Price.Value > 0,
+                HasRentalPrice = vehicle.RentalPrice.HasValue && vehicle.RentalPrice.Value > 0
+            };
 
-        [HttpPost]
-        public IActionResult Buy(Guid VehicleId, string Name, string Email, string Phone)
-        {
-            // TODO: Save buy request to database or send email
-            TempData["Message"] = $"Buy request submitted by {Name}.";
-            return RedirectToAction("Preview", new { id = VehicleId });
+            return View(viewModel);
         }
     }
 }
+

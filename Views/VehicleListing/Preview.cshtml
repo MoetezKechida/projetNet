@@ -1,50 +1,107 @@
-@model projetNet.Models.Vehicle
+@model projetNet.DTOs.Common.VehiclePreviewViewModel
 @{
     ViewData["Title"] = "Car Preview";
 }
 <div class="container mt-4">
-        @if (TempData["Message"] != null)
-        {
-            <div class="alert alert-success">@TempData["Message"]</div>
-        }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <div class="card">
-        <img src="@(!string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "https://images.unsplash.com/photo-1511918984145-48bbd2aa2d4c?auto=format&fit=crop&w=400&q=80")" class="card-img-top" alt="@Model.Model" style="height:300px;object-fit:cover;">
+        <img src="@(!string.IsNullOrEmpty(Model.Vehicle.ImageUrl) ? Model.Vehicle.ImageUrl : "https://images.unsplash.com/photo-1511918984145-48bbd2aa2d4c?auto=format&fit=crop&w=400&q=80")" 
+             class="card-img-top" 
+             alt="@Model.Vehicle.Model" 
+             style="height:300px;object-fit:cover;">
         <div class="card-body">
-            <h3 class="card-title">@Model.Brand @Model.Model</h3>
-            <p class="card-text">Price: <span class="badge bg-success">@string.Format("{0:F2}", Model.Price) €</span></p>
-            <p class="card-text">Year: @Model.Year</p>
-            <p class="card-text">@Model.Description</p>
-            <p class="card-text">Mileage: @Model.Mileage km</p>
-            <p class="card-text">Location: @Model.Location</p>
+            <h3 class="card-title">@Model.Vehicle.Brand @Model.Vehicle.Model</h3>
+            <p class="card-text">Year: @Model.Vehicle.Year</p>
+            <p class="card-text">@Model.Vehicle.Description</p>
+            <p class="card-text">Mileage: @Model.Vehicle.Mileage km</p>
+            <p class="card-text">Location: @Model.Vehicle.Location</p>
+            <p class="card-text">Status: <span class="badge bg-info">@Model.Vehicle.Status</span></p>
+            
+            @if (Model.HasSalePrice)
+            {
+                <p class="card-text">Sale Price: <span class="badge bg-success">@string.Format("{0:F2}", Model.Vehicle.Price) €</span></p>
+            }
+            @if (Model.HasRentalPrice)
+            {
+                <p class="card-text">Rental Price: <span class="badge bg-primary">@string.Format("{0:F2}", Model.Vehicle.RentalPrice) € / day</span></p>
+            }
+            
             <a href="/VehicleListing" class="btn btn-secondary">Back to Listings</a>
             <hr />
-            <div class="d-flex gap-2">
-                <button class="btn btn-success" onclick="document.getElementById('rentForm').style.display='block';">Rent</button>
-                <button class="btn btn-primary" onclick="showBuyPrompt();">Buy</button>
-            </div>
-            <form id="rentForm" action="/VehicleListing/Rent" method="post" style="display:none;margin-top:20px;" onsubmit="return showRentPrompt();">
-                <h5>Rent this car</h5>
-                <input type="hidden" name="VehicleId" value="@Model.Id" />
-                <div class="mb-2">
-                    <label>Start Date:</label>
-                    <input type="date" name="StartDate" class="form-control" required />
+            
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="d-flex gap-2">
+                    @if (Model.HasRentalPrice)
+                    {
+                        <button class="btn btn-success" onclick="document.getElementById('rentForm').style.display='block';">Rent this Vehicle</button>
+                    }
+                    @if (Model.HasSalePrice)
+                    {
+                        <button class="btn btn-primary" onclick="document.getElementById('buyForm').style.display='block';">Buy this Vehicle</button>
+                    }
+                    @if (!Model.HasSalePrice && !Model.HasRentalPrice)
+                    {
+                        <div class="alert alert-warning">This vehicle is not available for sale or rent.</div>
+                    }
                 </div>
-                <div class="mb-2">
-                    <label>End Date:</label>
-                    <input type="date" name="EndDate" class="form-control" required />
+
+                @if (Model.HasRentalPrice)
+                {
+                    <form id="rentForm" asp-controller="Booking" asp-action="Create" method="post" style="display:none;margin-top:20px;" class="p-3 border rounded">
+                        <h5>Rent this Vehicle</h5>
+                        <input type="hidden" name="VehicleId" value="@Model.Vehicle.Id" />
+                        <input type="hidden" name="BookingType" value="Rent" />
+                        <div class="mb-3">
+                            <label class="form-label">Start Date:</label>
+                            <input type="date" name="StartDate" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">End Date:</label>
+                            <input type="date" name="EndDate" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-muted">Daily rate: @string.Format("{0:F2}", Model.Vehicle.RentalPrice) €</p>
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit Rent Request</button>
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('rentForm').style.display='none';">Cancel</button>
+                    </form>
+                }
+
+                @if (Model.HasSalePrice)
+                {
+                    <form id="buyForm" asp-controller="Booking" asp-action="Create" method="post" style="display:none;margin-top:20px;" class="p-3 border rounded">
+                        <h5>Buy this Vehicle</h5>
+                        <input type="hidden" name="VehicleId" value="@Model.Vehicle.Id" />
+                        <input type="hidden" name="BookingType" value="Buy" />
+                        <div class="mb-3">
+                            <p><strong>Price: @string.Format("{0:F2}", Model.Vehicle.Price) €</strong></p>
+                            <p class="text-muted">Your purchase request will be sent to the seller who will contact you to finalize the transaction.</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Purchase Request</button>
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('buyForm').style.display='none';">Cancel</button>
+                    </form>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info mt-3">
+                    Please <a href="/Identity/Account/Login" class="alert-link">login</a> to make a booking request.
                 </div>
-                <button type="submit" class="btn btn-success">Submit Rent Request</button>
-            </form>
-            <script>
-                function showBuyPrompt() {
-                    alert('Your buying request has been registered, the seller will contact you soon');
-                }
-                function showRentPrompt() {
-                    alert('Your rent request has been registered!');
-                    document.getElementById('rentForm').style.display = 'none';
-                    return false;
-                }
-            </script>
+            }
         </div>
     </div>
 </div>
