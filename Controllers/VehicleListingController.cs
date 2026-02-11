@@ -17,19 +17,30 @@ namespace projetNet.Controllers
         // GET: /VehicleListing/
         public IActionResult Index()
         {
-            var vehicles = _context.Vehicles.ToList();
-            return View(vehicles);
+            var offers = _context.Offers
+                .Where(o => o.Status == "accepted")
+                .Select(o => new
+                {
+                    Offer = o,
+                    Vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == o.VehicleId),
+                    Seller = _context.Users.FirstOrDefault(u => u.Id == o.SellerId)
+                })
+                .ToList();
+
+            return View(offers);
         }
 
         // GET: /VehicleListing/Preview/5
         public IActionResult Preview(Guid id)
         {
-            var vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == id);
-            if (vehicle == null)
+            var offer = _context.Offers.FirstOrDefault(o => o.VehicleId == id && o.Status == "accepted");
+            if (offer == null)
             {
                 return NotFound();
             }
-            return View(vehicle);
+            var vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == offer.VehicleId);
+            var seller = _context.Users.FirstOrDefault(u => u.Id == offer.SellerId);
+            return View(new { Offer = offer, Vehicle = vehicle, Seller = seller });
         }
 
         [HttpPost]

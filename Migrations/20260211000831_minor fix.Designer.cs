@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projetNet.Data;
 
@@ -10,9 +11,11 @@ using projetNet.Data;
 namespace projetNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260211000831_minor fix")]
+    partial class minorfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,12 +214,6 @@ namespace projetNet.Migrations
                     b.Property<DateTime?>("RefreshTokenExpiryTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
@@ -368,7 +365,14 @@ namespace projetNet.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Reason")
+                    b.Property<string>("Report")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("ScheduledDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -535,7 +539,7 @@ namespace projetNet.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bb1b7ba7-2ced-41e3-9a58-2558980bfb9b"),
+                            Id = new Guid("3466c6ee-f48d-471d-8007-d23b174e67a7"),
                             Brand = "Toyota",
                             Description = "Reliable sedan, low mileage.",
                             ImageUrl = "https://images.unsplash.com/photo-1511918984145-48bbd2aa2d4c?auto=format&fit=crop&w=400&q=80",
@@ -549,7 +553,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("ad1dbab0-55bc-46b9-9fc0-e9bae500700d"),
+                            Id = new Guid("f05c709f-47c2-477e-a7ad-a3aa129c5e8f"),
                             Brand = "BMW",
                             Description = "Luxury SUV, fully loaded.",
                             ImageUrl = "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80",
@@ -563,7 +567,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("4e51a813-fd69-496a-9605-b6e84f0e2052"),
+                            Id = new Guid("e3c3de72-78bf-4b96-99a3-b2b6ca3eff9f"),
                             Brand = "Renault",
                             Description = "Compact city car, economical.",
                             ImageUrl = "https://images.unsplash.com/photo-1461632830798-3adb3034e4c8?auto=format&fit=crop&w=400&q=80",

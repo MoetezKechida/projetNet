@@ -28,12 +28,7 @@ namespace projetNet.Migrations
                 keyColumn: "Id",
                 keyValue: new Guid("9e199fbc-e7a0-45a0-97e8-e18837e08722"));
 
-            migrationBuilder.AddColumn<string>(
-                name: "RefreshToken",
-                table: "AspNetUsers",
-                type: "longtext",
-                nullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4");
+
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "RefreshTokenExpiryTime",
