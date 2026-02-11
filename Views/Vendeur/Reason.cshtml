@@ -1,0 +1,74 @@
+
+@{
+    ViewData["Title"] = "Reason";
+    var vehicle = ViewBag.Vehicle as projetNet.Models.Vehicle;
+    var inspection = ViewBag.Inspection as projetNet.Models.Inspection;
+}
+
+
+
+<div class="container mt-4">
+
+    @if (vehicle == null)
+    {
+        <div class="alert alert-danger">
+            Vehicle not found.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Vehicle Inspection</h4>
+            </div>
+
+            <div class="card-body">
+
+                @if (!string.IsNullOrEmpty(vehicle.ImageUrl))
+                {
+                    <div class="text-center mb-3">
+                        <img src="@vehicle.ImageUrl"
+                             class="img-fluid rounded"
+                             style="max-height:300px; object-fit:contain;" />
+                    </div>
+                }
+
+                <h5>@vehicle.Brand @vehicle.Model (@vehicle.Year)</h5>
+
+                <p>
+                    <strong>VIN:</strong> @vehicle.Vin <br />
+                    <strong>Price:</strong> @vehicle.Price?.ToString("0.##") Dt <br />
+                    <strong>Rental Price:</strong> @vehicle.RentalPrice?.ToString("0.##") Dt <br />
+                    <strong>Mileage:</strong> @vehicle.Mileage <br />
+                    <strong>Location:</strong> @vehicle.Location <br />
+                    <strong>Status:</strong> @vehicle.Status
+                </p>
+
+                <hr />
+
+                <h5 class="text-danger">decline Reason</h5>
+
+                @if (inspection != null)
+                {
+                    <div class="alert alert-danger">
+                        @inspection.Reason
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-secondary">
+                        No inspection reason available.
+                    </div>
+                }
+
+            </div>
+
+            <div class="card-footer text-end">
+                <a asp-action="UserVehicle" class="btn btn-secondary">
+                    Back
+                </a>
+            </div>
+        </div>
+    }
+
+</div>
