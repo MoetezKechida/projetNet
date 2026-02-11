@@ -1,8 +1,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using projetNet.Models;
+<<<<<<< HEAD
 using projetNet.Services.ServiceContracts;
+=======
+using projetNet.Data;
+using projetNet.DTOs.Common;
+using System.Linq;
+>>>>>>> youssef
 
 namespace projetNet.Controllers
 {
@@ -40,10 +47,16 @@ namespace projetNet.Controllers
         // GET: /VehicleListing/Preview/5
         public async Task<IActionResult> Preview(Guid id)
         {
+<<<<<<< HEAD
             // Search for an accepted offer for this vehicle
             var offers = await _offerService.SearchAsync(null, null, null, "accepted");
             var offer = offers.FirstOrDefault(o => o.VehicleId == id);
             if (offer == null)
+=======
+            var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.Id == id);
+            if (vehicle == null)
+            {
+>>>>>>> youssef
                 return NotFound();
 
             var vehicle = await _vehicleService.GetByIdAsync(offer.VehicleId);
@@ -73,9 +86,21 @@ namespace projetNet.Controllers
                 return RedirectToAction("Index");
             }
 
+<<<<<<< HEAD
             TempData["Message"] = $"Buy request submitted with price {Amount:F2} €.";
             var offer = await _offerService.GetByIdAsync(OfferId);
             return RedirectToAction("Preview", new { id = offer?.VehicleId });
+=======
+            var viewModel = new VehiclePreviewViewModel
+            {
+                Vehicle = vehicle,
+                HasSalePrice = vehicle.Price.HasValue && vehicle.Price.Value > 0,
+                HasRentalPrice = vehicle.RentalPrice.HasValue && vehicle.RentalPrice.Value > 0
+            };
+
+            return View(viewModel);
+>>>>>>> youssef
         }
     }
 }
+

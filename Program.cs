@@ -12,7 +12,7 @@ using projetNet.Data;
 using projetNet.Middleware;
 using projetNet.Models;
 
-using projetNet.Repositories;
+using projetNet.Repositories.RepositoryContracts;
 using projetNet.Repositories.Repositories;
 using projetNet.Services;
 using projetNet.Services.ServiceContracts;
@@ -48,7 +48,6 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-
 
 
 // Configure Authentication (Cookie + JWT)
@@ -97,8 +96,8 @@ builder.Services.AddSingleton<IMongoContext, MongoContext>();
 
 // EF Core Repositories
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
-builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 builder.Services.AddScoped<IInspectionRepository, InspectionRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 // MongoDB Repositories
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
@@ -106,10 +105,10 @@ builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 
 // Services
 builder.Services.AddScoped<IVehicleService, VehicleService>();
-builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IInspectionService, InspectionService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
