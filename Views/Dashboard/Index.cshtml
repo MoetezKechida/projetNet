@@ -1,0 +1,52 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var sales = ViewBag.Sales as List<projetNet.Models.VehiculeSale>;
+    var bookings = ViewBag.Bookings as List<projetNet.Models.Booking>;
+}
+<h2>Admin Dashboard</h2>
+<h3>Sales History</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>OfferId</th>
+            <th>BuyerId</th>
+            <th>Amount</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sale in sales)
+        {
+            <tr>
+                <td>@sale.OfferId</td>
+                <td>@sale.BuyerId</td>
+                <td>@sale.Amount</td>
+                <td>@sale.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h3>Rent History</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>BuyerId</th>
+            <th>StartDate</th>
+            <th>EndDate</th>
+            <th>TotalAmount</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in bookings)
+        {
+            <tr>
+                <td>@booking.BuyerId</td>
+                <td>@booking.StartDate.ToShortDateString()</td>
+                <td>@booking.EndDate.ToShortDateString()</td>
+                <td>@booking.TotalAmount</td>
+                <td>@booking.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

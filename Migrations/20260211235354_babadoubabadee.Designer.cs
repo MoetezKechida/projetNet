@@ -11,8 +11,8 @@ using projetNet.Data;
 namespace projetNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260211225010_nukeMigration")]
-    partial class nukeMigration
+    [Migration("20260211235354_babadoubabadee")]
+    partial class babadoubabadee
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -252,7 +252,7 @@ namespace projetNet.Migrations
                         {
                             Id = "owner1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a56a0daa-c987-477a-9cca-83e73acb1137",
+                            ConcurrencyStamp = "2f1ba0bd-1372-4dd3-b809-380f14e96cc3",
                             EmailConfirmed = false,
                             FirstName = "Jean",
                             IsEmailVerified = false,
@@ -261,7 +261,7 @@ namespace projetNet.Migrations
                             LastName = "Dupont",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e8564da5-2425-4ac2-b43a-b5ef0aa6cb86",
+                            SecurityStamp = "21d9bfd2-0cb0-461c-a504-d07dd6755f27",
                             SellerRating = 0.0,
                             SellerReviewCount = 0,
                             TwoFactorEnabled = false,
@@ -271,7 +271,7 @@ namespace projetNet.Migrations
                         {
                             Id = "owner2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4933c613-a503-4e9d-8cfd-f0fe07faf021",
+                            ConcurrencyStamp = "4cb64b48-7eae-4a1a-9ef6-e978cc4336e1",
                             EmailConfirmed = false,
                             FirstName = "Marie",
                             IsEmailVerified = false,
@@ -280,7 +280,7 @@ namespace projetNet.Migrations
                             LastName = "Curie",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7aed8ed3-427f-4bfd-900e-a7fdaad1fcc8",
+                            SecurityStamp = "3cc7ebce-efe2-4797-be05-91ab6031b438",
                             SellerRating = 0.0,
                             SellerReviewCount = 0,
                             TwoFactorEnabled = false,
@@ -290,7 +290,7 @@ namespace projetNet.Migrations
                         {
                             Id = "owner3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f293c519-30c1-449a-ab72-b43e92e07e0e",
+                            ConcurrencyStamp = "2960f037-8162-44a8-806b-d51826963c84",
                             EmailConfirmed = false,
                             FirstName = "Ali",
                             IsEmailVerified = false,
@@ -299,7 +299,7 @@ namespace projetNet.Migrations
                             LastName = "Ben Salah",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "833ca868-5819-41b8-87a9-31edec7e53de",
+                            SecurityStamp = "cd32f9b4-ea2f-430a-9b73-d31b563e3689",
                             SellerRating = 0.0,
                             SellerReviewCount = 0,
                             TwoFactorEnabled = false,
@@ -309,7 +309,7 @@ namespace projetNet.Migrations
                         {
                             Id = "owner4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a0322caa-0ea3-4b8b-b053-188e305522a2",
+                            ConcurrencyStamp = "404e2e7b-682e-4376-b9ae-86b803bda34f",
                             EmailConfirmed = false,
                             FirstName = "Sophie",
                             IsEmailVerified = false,
@@ -318,7 +318,7 @@ namespace projetNet.Migrations
                             LastName = "Martin",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "af495606-ef61-45ae-b7b5-dbee58535858",
+                            SecurityStamp = "27a359f6-364a-4a90-b40c-6b783537b8b0",
                             SellerRating = 0.0,
                             SellerReviewCount = 0,
                             TwoFactorEnabled = false,
@@ -328,7 +328,7 @@ namespace projetNet.Migrations
                         {
                             Id = "owner5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f9e63342-62e5-4c3e-b1c0-7ab4a24f4224",
+                            ConcurrencyStamp = "bb47b35b-782e-4194-9566-789298d904c4",
                             EmailConfirmed = false,
                             FirstName = "David",
                             IsEmailVerified = false,
@@ -337,7 +337,7 @@ namespace projetNet.Migrations
                             LastName = "Smith",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4bbefd67-a8b9-4b55-9ef2-4c77e4349d5e",
+                            SecurityStamp = "0169869e-9878-452c-b8be-e9e69fa0ce2e",
                             SellerRating = 0.0,
                             SellerReviewCount = 0,
                             TwoFactorEnabled = false,
@@ -347,7 +347,7 @@ namespace projetNet.Migrations
                         {
                             Id = "owner6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "90c6cd0b-f0e8-4b5f-b530-6d37f58ee244",
+                            ConcurrencyStamp = "074d6d85-9607-49dc-854d-e9af38048145",
                             EmailConfirmed = false,
                             FirstName = "Fatima",
                             IsEmailVerified = false,
@@ -356,7 +356,7 @@ namespace projetNet.Migrations
                             LastName = "El Amrani",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6d123a2d-ccd3-4e36-9371-c3b350f72759",
+                            SecurityStamp = "b51336eb-ab30-47e8-81c2-5f21521dc8ab",
                             SellerRating = 0.0,
                             SellerReviewCount = 0,
                             TwoFactorEnabled = false,
@@ -450,75 +450,75 @@ namespace projetNet.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d377d3cc-ecf9-4bb2-8b21-2383874b811e"),
+                            Id = new Guid("9dbd077b-1ab3-4f19-ab46-8638495b9931"),
                             Price = 15000m,
                             SellerId = "owner1",
                             Status = "accepted",
                             Type = "Sale",
-                            VehicleId = new Guid("33df5f41-397e-4ec9-b83b-f36cd524e775")
+                            VehicleId = new Guid("91f249ce-e391-4546-8555-2493914bd79f")
                         },
                         new
                         {
-                            Id = new Guid("021b8a8b-5958-47ee-841b-d062e604159a"),
+                            Id = new Guid("11b4561a-1070-44aa-85b3-ce75ebe5c0ea"),
                             Price = 120m,
                             SellerId = "owner2",
                             Status = "accepted",
                             Type = "Rent",
-                            VehicleId = new Guid("08101ea4-2e65-41eb-94cc-71b6009085c4")
+                            VehicleId = new Guid("f6cea901-fbe4-485c-b83c-e41731156b80")
                         },
                         new
                         {
-                            Id = new Guid("d4e85c80-5585-493d-944d-8d120b799762"),
+                            Id = new Guid("ee818b69-ab26-41f9-85c5-5bb57511f9ef"),
                             Price = 9000m,
                             SellerId = "owner3",
                             Status = "accepted",
                             Type = "Sale",
-                            VehicleId = new Guid("c30e3feb-6efc-45c8-b486-3627877cee7e")
+                            VehicleId = new Guid("ffaea396-a7a1-4bf5-91c4-4437e502c245")
                         },
                         new
                         {
-                            Id = new Guid("54120a1b-6f8f-479e-bc99-88532acb4750"),
+                            Id = new Guid("448510e1-5790-44ac-ab18-4512a8b070e9"),
                             Price = 80m,
                             SellerId = "owner4",
                             Status = "accepted",
                             Type = "Rent",
-                            VehicleId = new Guid("19b6b5d8-5dc3-4e63-80c0-936c1662da58")
+                            VehicleId = new Guid("4491282b-a1a2-4df8-bcfc-a888f8dc5a36")
                         },
                         new
                         {
-                            Id = new Guid("448f0507-996c-4de6-a1bb-95533124867c"),
+                            Id = new Guid("61a83c67-8415-4cf3-b0c1-6105b9903ac3"),
                             Price = 25000m,
                             SellerId = "owner5",
                             Status = "accepted",
                             Type = "Sale",
-                            VehicleId = new Guid("ee31c0e5-ff8a-4782-aae5-4c71c3aa0cd1")
+                            VehicleId = new Guid("8b0c391f-03b4-4ae0-b429-cf0b1ad36297")
                         },
                         new
                         {
-                            Id = new Guid("9f8d063d-db6f-4979-b216-fb80ba9da0f4"),
+                            Id = new Guid("3ff98863-fdb7-45d8-a371-4e3fed03ed3b"),
                             Price = 100m,
                             SellerId = "owner6",
                             Status = "accepted",
                             Type = "Rent",
-                            VehicleId = new Guid("9f8d0e13-9fc4-4236-9c97-b6846e66bece")
+                            VehicleId = new Guid("2f469778-8bf5-4cdf-9e0e-ac89ea2a2a10")
                         },
                         new
                         {
-                            Id = new Guid("3a019b13-6826-44a6-92b6-4abfba9cc4f6"),
+                            Id = new Guid("043103e0-9d0d-4e79-8d90-bbdeb127171c"),
                             Price = 8000m,
                             SellerId = "owner3",
                             Status = "rejected",
                             Type = "Sale",
-                            VehicleId = new Guid("c30e3feb-6efc-45c8-b486-3627877cee7e")
+                            VehicleId = new Guid("ffaea396-a7a1-4bf5-91c4-4437e502c245")
                         },
                         new
                         {
-                            Id = new Guid("30803699-3cd0-4ee2-bbba-83ca1adc5638"),
+                            Id = new Guid("40ea8f70-c418-48ea-8907-72683c5d2d3c"),
                             Price = 60m,
                             SellerId = "owner4",
                             Status = "pending",
                             Type = "Rent",
-                            VehicleId = new Guid("19b6b5d8-5dc3-4e63-80c0-936c1662da58")
+                            VehicleId = new Guid("4491282b-a1a2-4df8-bcfc-a888f8dc5a36")
                         });
                 });
 
@@ -574,7 +574,7 @@ namespace projetNet.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("33df5f41-397e-4ec9-b83b-f36cd524e775"),
+                            Id = new Guid("91f249ce-e391-4546-8555-2493914bd79f"),
                             Brand = "Toyota",
                             Description = "Reliable sedan, low mileage.",
                             ImageUrl = "https://images.unsplash.com/photo-1511918984145-48bbd2aa2d4c?auto=format&fit=crop&w=400&q=80",
@@ -588,7 +588,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("08101ea4-2e65-41eb-94cc-71b6009085c4"),
+                            Id = new Guid("f6cea901-fbe4-485c-b83c-e41731156b80"),
                             Brand = "BMW",
                             Description = "Luxury SUV, fully loaded.",
                             ImageUrl = "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80",
@@ -602,7 +602,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c30e3feb-6efc-45c8-b486-3627877cee7e"),
+                            Id = new Guid("ffaea396-a7a1-4bf5-91c4-4437e502c245"),
                             Brand = "Renault",
                             Description = "Compact city car, economical.",
                             ImageUrl = "https://images.unsplash.com/photo-1461632830798-3adb3034e4c8?auto=format&fit=crop&w=400&q=80",
@@ -616,7 +616,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("19b6b5d8-5dc3-4e63-80c0-936c1662da58"),
+                            Id = new Guid("4491282b-a1a2-4df8-bcfc-a888f8dc5a36"),
                             Brand = "Peugeot",
                             Description = "Brand new, perfect for city driving.",
                             ImageUrl = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
@@ -630,7 +630,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("ee31c0e5-ff8a-4782-aae5-4c71c3aa0cd1"),
+                            Id = new Guid("8b0c391f-03b4-4ae0-b429-cf0b1ad36297"),
                             Brand = "Mercedes",
                             Description = "Elegant and comfortable, well maintained.",
                             ImageUrl = "https://images.unsplash.com/photo-1502877336888-7bfc88a5e4a0?auto=format&fit=crop&w=400&q=80",
@@ -644,7 +644,7 @@ namespace projetNet.Migrations
                         },
                         new
                         {
-                            Id = new Guid("9f8d0e13-9fc4-4236-9c97-b6846e66bece"),
+                            Id = new Guid("2f469778-8bf5-4cdf-9e0e-ac89ea2a2a10"),
                             Brand = "Volkswagen",
                             Description = "Popular hatchback, great for families.",
                             ImageUrl = "https://images.unsplash.com/photo-1519643381400-7f7c7d3e0c44?auto=format&fit=crop&w=400&q=80",

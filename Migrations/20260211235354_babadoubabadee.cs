@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace projetNet.Migrations
 {
     /// <inheritdoc />
-    public partial class nukeMigration : Migration
+    public partial class babadoubabadee : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -325,12 +325,12 @@ namespace projetNet.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsEmailVerified", "IsPhoneVerified", "IsVerifiedSeller", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RefreshToken", "RefreshTokenExpiryTime", "SecurityStamp", "SellerRating", "SellerReviewCount", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "owner1", 0, "a56a0daa-c987-477a-9cca-83e73acb1137", null, null, false, "Jean", false, false, true, "Dupont", false, null, null, null, null, null, false, null, null, "e8564da5-2425-4ac2-b43a-b5ef0aa6cb86", 0.0, 0, false, "seller1" },
-                    { "owner2", 0, "4933c613-a503-4e9d-8cfd-f0fe07faf021", null, null, false, "Marie", false, false, false, "Curie", false, null, null, null, null, null, false, null, null, "7aed8ed3-427f-4bfd-900e-a7fdaad1fcc8", 0.0, 0, false, "seller2" },
-                    { "owner3", 0, "f293c519-30c1-449a-ab72-b43e92e07e0e", null, null, false, "Ali", false, false, true, "Ben Salah", false, null, null, null, null, null, false, null, null, "833ca868-5819-41b8-87a9-31edec7e53de", 0.0, 0, false, "seller3" },
-                    { "owner4", 0, "a0322caa-0ea3-4b8b-b053-188e305522a2", null, null, false, "Sophie", false, false, true, "Martin", false, null, null, null, null, null, false, null, null, "af495606-ef61-45ae-b7b5-dbee58535858", 0.0, 0, false, "seller4" },
-                    { "owner5", 0, "f9e63342-62e5-4c3e-b1c0-7ab4a24f4224", null, null, false, "David", false, false, false, "Smith", false, null, null, null, null, null, false, null, null, "4bbefd67-a8b9-4b55-9ef2-4c77e4349d5e", 0.0, 0, false, "seller5" },
-                    { "owner6", 0, "90c6cd0b-f0e8-4b5f-b530-6d37f58ee244", null, null, false, "Fatima", false, false, true, "El Amrani", false, null, null, null, null, null, false, null, null, "6d123a2d-ccd3-4e36-9371-c3b350f72759", 0.0, 0, false, "seller6" }
+                    { "owner1", 0, "2f1ba0bd-1372-4dd3-b809-380f14e96cc3", null, null, false, "Jean", false, false, true, "Dupont", false, null, null, null, null, null, false, null, null, "21d9bfd2-0cb0-461c-a504-d07dd6755f27", 0.0, 0, false, "seller1" },
+                    { "owner2", 0, "4cb64b48-7eae-4a1a-9ef6-e978cc4336e1", null, null, false, "Marie", false, false, false, "Curie", false, null, null, null, null, null, false, null, null, "3cc7ebce-efe2-4797-be05-91ab6031b438", 0.0, 0, false, "seller2" },
+                    { "owner3", 0, "2960f037-8162-44a8-806b-d51826963c84", null, null, false, "Ali", false, false, true, "Ben Salah", false, null, null, null, null, null, false, null, null, "cd32f9b4-ea2f-430a-9b73-d31b563e3689", 0.0, 0, false, "seller3" },
+                    { "owner4", 0, "404e2e7b-682e-4376-b9ae-86b803bda34f", null, null, false, "Sophie", false, false, true, "Martin", false, null, null, null, null, null, false, null, null, "27a359f6-364a-4a90-b40c-6b783537b8b0", 0.0, 0, false, "seller4" },
+                    { "owner5", 0, "bb47b35b-782e-4194-9566-789298d904c4", null, null, false, "David", false, false, false, "Smith", false, null, null, null, null, null, false, null, null, "0169869e-9878-452c-b8be-e9e69fa0ce2e", 0.0, 0, false, "seller5" },
+                    { "owner6", 0, "074d6d85-9607-49dc-854d-e9af38048145", null, null, false, "Fatima", false, false, true, "El Amrani", false, null, null, null, null, null, false, null, null, "b51336eb-ab30-47e8-81c2-5f21521dc8ab", 0.0, 0, false, "seller6" }
                 });
 
             migrationBuilder.InsertData(
@@ -338,14 +338,14 @@ namespace projetNet.Migrations
                 columns: new[] { "Id", "Price", "SellerId", "Status", "Type", "VehicleId" },
                 values: new object[,]
                 {
-                    { new Guid("021b8a8b-5958-47ee-841b-d062e604159a"), 120m, "owner2", "accepted", "Rent", new Guid("08101ea4-2e65-41eb-94cc-71b6009085c4") },
-                    { new Guid("30803699-3cd0-4ee2-bbba-83ca1adc5638"), 60m, "owner4", "pending", "Rent", new Guid("19b6b5d8-5dc3-4e63-80c0-936c1662da58") },
-                    { new Guid("3a019b13-6826-44a6-92b6-4abfba9cc4f6"), 8000m, "owner3", "rejected", "Sale", new Guid("c30e3feb-6efc-45c8-b486-3627877cee7e") },
-                    { new Guid("448f0507-996c-4de6-a1bb-95533124867c"), 25000m, "owner5", "accepted", "Sale", new Guid("ee31c0e5-ff8a-4782-aae5-4c71c3aa0cd1") },
-                    { new Guid("54120a1b-6f8f-479e-bc99-88532acb4750"), 80m, "owner4", "accepted", "Rent", new Guid("19b6b5d8-5dc3-4e63-80c0-936c1662da58") },
-                    { new Guid("9f8d063d-db6f-4979-b216-fb80ba9da0f4"), 100m, "owner6", "accepted", "Rent", new Guid("9f8d0e13-9fc4-4236-9c97-b6846e66bece") },
-                    { new Guid("d377d3cc-ecf9-4bb2-8b21-2383874b811e"), 15000m, "owner1", "accepted", "Sale", new Guid("33df5f41-397e-4ec9-b83b-f36cd524e775") },
-                    { new Guid("d4e85c80-5585-493d-944d-8d120b799762"), 9000m, "owner3", "accepted", "Sale", new Guid("c30e3feb-6efc-45c8-b486-3627877cee7e") }
+                    { new Guid("043103e0-9d0d-4e79-8d90-bbdeb127171c"), 8000m, "owner3", "rejected", "Sale", new Guid("ffaea396-a7a1-4bf5-91c4-4437e502c245") },
+                    { new Guid("11b4561a-1070-44aa-85b3-ce75ebe5c0ea"), 120m, "owner2", "accepted", "Rent", new Guid("f6cea901-fbe4-485c-b83c-e41731156b80") },
+                    { new Guid("3ff98863-fdb7-45d8-a371-4e3fed03ed3b"), 100m, "owner6", "accepted", "Rent", new Guid("2f469778-8bf5-4cdf-9e0e-ac89ea2a2a10") },
+                    { new Guid("40ea8f70-c418-48ea-8907-72683c5d2d3c"), 60m, "owner4", "pending", "Rent", new Guid("4491282b-a1a2-4df8-bcfc-a888f8dc5a36") },
+                    { new Guid("448510e1-5790-44ac-ab18-4512a8b070e9"), 80m, "owner4", "accepted", "Rent", new Guid("4491282b-a1a2-4df8-bcfc-a888f8dc5a36") },
+                    { new Guid("61a83c67-8415-4cf3-b0c1-6105b9903ac3"), 25000m, "owner5", "accepted", "Sale", new Guid("8b0c391f-03b4-4ae0-b429-cf0b1ad36297") },
+                    { new Guid("9dbd077b-1ab3-4f19-ab46-8638495b9931"), 15000m, "owner1", "accepted", "Sale", new Guid("91f249ce-e391-4546-8555-2493914bd79f") },
+                    { new Guid("ee818b69-ab26-41f9-85c5-5bb57511f9ef"), 9000m, "owner3", "accepted", "Sale", new Guid("ffaea396-a7a1-4bf5-91c4-4437e502c245") }
                 });
 
             migrationBuilder.InsertData(
@@ -353,12 +353,12 @@ namespace projetNet.Migrations
                 columns: new[] { "Id", "Brand", "Description", "ImageUrl", "Location", "Mileage", "Model", "OwnerId", "Price", "RentalPrice", "Status", "Vin", "Year" },
                 values: new object[,]
                 {
-                    { new Guid("08101ea4-2e65-41eb-94cc-71b6009085c4"), "BMW", "Luxury SUV, fully loaded.", "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80", "Lyon", 8000, "X5", "owner2", 35000m, null, null, "VIN0987654321", 2021 },
-                    { new Guid("19b6b5d8-5dc3-4e63-80c0-936c1662da58"), "Peugeot", "Brand new, perfect for city driving.", "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80", "Nice", 500, "208", "owner4", 12000m, null, null, "VIN5566778899", 2023 },
-                    { new Guid("33df5f41-397e-4ec9-b83b-f36cd524e775"), "Toyota", "Reliable sedan, low mileage.", "https://images.unsplash.com/photo-1511918984145-48bbd2aa2d4c?auto=format&fit=crop&w=400&q=80", "Paris", 12000, "Corolla", "owner1", 15000m, null, null, "VIN1234567890", 2022 },
-                    { new Guid("9f8d0e13-9fc4-4236-9c97-b6846e66bece"), "Volkswagen", "Popular hatchback, great for families.", "https://images.unsplash.com/photo-1519643381400-7f7c7d3e0c44?auto=format&fit=crop&w=400&q=80", "Toulouse", 15000, "Golf", "owner6", 14000m, null, null, "VIN4455667788", 2021 },
-                    { new Guid("c30e3feb-6efc-45c8-b486-3627877cee7e"), "Renault", "Compact city car, economical.", "https://images.unsplash.com/photo-1461632830798-3adb3034e4c8?auto=format&fit=crop&w=400&q=80", "Marseille", 20000, "Clio", "owner3", 9000m, null, null, "VIN1122334455", 2020 },
-                    { new Guid("ee31c0e5-ff8a-4782-aae5-4c71c3aa0cd1"), "Mercedes", "Elegant and comfortable, well maintained.", "https://images.unsplash.com/photo-1502877336888-7bfc88a5e4a0?auto=format&fit=crop&w=400&q=80", "Bordeaux", 30000, "C-Class", "owner5", 25000m, null, null, "VIN9988776655", 2019 }
+                    { new Guid("2f469778-8bf5-4cdf-9e0e-ac89ea2a2a10"), "Volkswagen", "Popular hatchback, great for families.", "https://images.unsplash.com/photo-1519643381400-7f7c7d3e0c44?auto=format&fit=crop&w=400&q=80", "Toulouse", 15000, "Golf", "owner6", 14000m, null, null, "VIN4455667788", 2021 },
+                    { new Guid("4491282b-a1a2-4df8-bcfc-a888f8dc5a36"), "Peugeot", "Brand new, perfect for city driving.", "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80", "Nice", 500, "208", "owner4", 12000m, null, null, "VIN5566778899", 2023 },
+                    { new Guid("8b0c391f-03b4-4ae0-b429-cf0b1ad36297"), "Mercedes", "Elegant and comfortable, well maintained.", "https://images.unsplash.com/photo-1502877336888-7bfc88a5e4a0?auto=format&fit=crop&w=400&q=80", "Bordeaux", 30000, "C-Class", "owner5", 25000m, null, null, "VIN9988776655", 2019 },
+                    { new Guid("91f249ce-e391-4546-8555-2493914bd79f"), "Toyota", "Reliable sedan, low mileage.", "https://images.unsplash.com/photo-1511918984145-48bbd2aa2d4c?auto=format&fit=crop&w=400&q=80", "Paris", 12000, "Corolla", "owner1", 15000m, null, null, "VIN1234567890", 2022 },
+                    { new Guid("f6cea901-fbe4-485c-b83c-e41731156b80"), "BMW", "Luxury SUV, fully loaded.", "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80", "Lyon", 8000, "X5", "owner2", 35000m, null, null, "VIN0987654321", 2021 },
+                    { new Guid("ffaea396-a7a1-4bf5-91c4-4437e502c245"), "Renault", "Compact city car, economical.", "https://images.unsplash.com/photo-1461632830798-3adb3034e4c8?auto=format&fit=crop&w=400&q=80", "Marseille", 20000, "Clio", "owner3", 9000m, null, null, "VIN1122334455", 2020 }
                 });
 
             migrationBuilder.CreateIndex(

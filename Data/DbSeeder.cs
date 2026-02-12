@@ -23,7 +23,7 @@ public static class DbSeeder
 
         var admins = new List<(string Email, string Password, string FirstName, string LastName)>
         {
-            ("yasserchouket0102@gmail.com", "Admin@123", "Yasser", "Chouket"),
+            ("admin@projetnet.com", "Admin@2026", "Admin", "ProjetNet"),
         };
 
         foreach (var (email, password, firstName, lastName) in admins)
