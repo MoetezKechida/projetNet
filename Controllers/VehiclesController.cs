@@ -33,6 +33,32 @@ public class VehiclesController : ControllerBase
         return Ok(vehicle);
     }
 
+    [HttpGet("{id}/details")]
+    public async Task<IActionResult> GetDetailsWithSeller(Guid id)
+    {
+        var vehicle = await _vehicleService.GetByIdAsync(id);
+        if (vehicle == null)
+            return NotFound();
+
+        var owner = await _userManager.FindByIdAsync(vehicle.OwnerId);
+
+        return Ok(new
+        {
+            vehicle,
+            seller = owner != null ? new
+            {
+                id = owner.Id,
+                firstName = owner.FirstName,
+                lastName = owner.LastName,
+                email = owner.Email,
+                phoneNumber = owner.PhoneNumber,
+                rating = owner.SellerRating,
+                reviewCount = owner.SellerReviewCount,
+                isVerifiedSeller = owner.IsVerifiedSeller
+            } : null
+        });
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Vehicle vehicle)
     {

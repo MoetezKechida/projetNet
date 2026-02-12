@@ -58,3 +58,70 @@ export interface CarFilters {
   maxPrice?: number;
   type?: string;
 }
+
+// Booking types
+export interface Booking {
+  id: string;
+  vehicleId: string;
+  buyerId: string;
+  bookingType: string;
+  startDate: string;
+  endDate: string;
+  totalAmount: number;
+  status: string;
+}
+
+export interface BookingDetails {
+  booking: Booking;
+  vehicle: {
+    id: string;
+    brand: string;
+    model?: string;
+    year: number;
+    imageUrl?: string;
+    price?: number;
+    rentalPrice?: number;
+  } | null;
+  user: {
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phoneNumber?: string;
+  } | null;
+}
+
+// Inspection types
+export interface Inspection {
+  id: string;
+  vehicleId: string;
+  inspectorId?: string;
+  reason?: string;
+}
+
+// VehicleSale types
+export interface VehicleSale {
+  id: string;
+  offerId: string;
+  buyerId: string;
+  amount: number;
+  status: string;
+}
+
+// Dashboard stats
+export interface DashboardStats {
+  sales: VehicleSale[];
+  bookings: Booking[];
+}
+
+// Inspector types
+export interface InspectorUser {
+  id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+}
+
+// Brands with models
+export type BrandsWithModels = Record<string, string[]>;

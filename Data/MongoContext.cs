@@ -15,10 +15,16 @@ public class MongoContext : IMongoContext
     {
         var connectionString = configuration.GetConnectionString("MongoConnection");
         
-        // Configure MongoDB client settings with SSL
         var settings = MongoClientSettings.FromConnectionString(connectionString);
         settings.ServerApi = new ServerApi(ServerApiVersion.V1);
-        settings.ConnectTimeout = TimeSpan.FromSeconds(30);
+        settings.UseTls = true;
+        settings.AllowInsecureTls = true;
+        settings.SslSettings = new SslSettings
+        {
+            CheckCertificateRevocation = false,
+            EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12 | System.Security.Authentication.SslProtocols.Tls13
+        };
+        settings.DirectConnection = false;
         settings.ServerSelectionTimeout = TimeSpan.FromSeconds(30);
         
         var client = new MongoClient(settings);

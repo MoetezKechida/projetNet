@@ -20,6 +20,7 @@ const schema = z
     firstName: z.string().min(1, "Required"),
     lastName: z.string().min(1, "Required"),
     phoneNumber: z.string().min(1, "Required"),
+    userType: z.enum(["Buyer", "Seller"]),
   })
   .refine((d) => d.password === d.confirmPassword, {
     message: "Passwords must match",
@@ -36,9 +37,11 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: { userType: "Buyer" },
   });
 
   const onSubmit = async (data: FormData) => {
@@ -51,6 +54,7 @@ export default function RegisterPage() {
         firstName: data.firstName,
         lastName: data.lastName,
         phoneNumber: data.phoneNumber,
+        userType: data.userType,
       });
       localStorage.setItem("token", res.token);
       localStorage.setItem("refreshToken", res.refreshToken);
@@ -114,6 +118,46 @@ export default function RegisterPage() {
               {...register("confirmPassword")}
               error={errors.confirmPassword?.message}
             />
+            <div>
+              <label className="block text-sm font-medium text-dark mb-2">I want to</label>
+              <div className="grid grid-cols-2 gap-3">
+                <label
+                  className={`flex items-center justify-center gap-2 rounded-xl border-2 p-3 cursor-pointer transition-all ${
+                    watch("userType") === "Buyer"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-border hover:border-gray-300"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    value="Buyer"
+                    {...register("userType")}
+                    className="sr-only"
+                  />
+                  <span className="text-lg">🛒</span>
+                  <span className="font-medium">Buy / Rent</span>
+                </label>
+                <label
+                  className={`flex items-center justify-center gap-2 rounded-xl border-2 p-3 cursor-pointer transition-all ${
+                    watch("userType") === "Seller"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-border hover:border-gray-300"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    value="Seller"
+                    {...register("userType")}
+                    className="sr-only"
+                  />
+                  <span className="text-lg">🚗</span>
+                  <span className="font-medium">Sell Cars</span>
+                </label>
+              </div>
+              {errors.userType && (
+                <p className="mt-1 text-sm text-red-500">{errors.userType.message}</p>
+              )}
+            </div>
             <Button
               type="submit"
               className="w-full"
