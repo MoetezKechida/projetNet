@@ -79,12 +79,26 @@ public class BookingController : Controller
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
-        {
             return Unauthorized();
-        }
 
         var bookings = await _bookingService.GetByBuyerIdAsync(user.Id);
-        return View(bookings);
+
+        var bookingViewModels = new List<BookingDetailsViewModel>();
+
+        foreach (var booking in bookings)
+        {
+            var vehicle = await _vehicleService.GetByIdAsync(booking.VehicleId);
+            var seller = await _userManager.FindByIdAsync(vehicle.OwnerId);
+
+            bookingViewModels.Add(new BookingDetailsViewModel
+            {
+                Booking = booking,
+                Vehicle = vehicle,
+                User = seller
+            });
+        }
+
+        return View(bookingViewModels);
     }
 
     // GET: Booking/Requests (for sellers)
@@ -93,11 +107,42 @@ public class BookingController : Controller
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
-        {
             return Unauthorized();
-        }
 
         var bookings = await _bookingService.GetBySellerIdAsync(user.Id);
-        return View(bookings);
+
+        var bookingViewModels = new List<BookingDetailsViewModel>();
+
+        foreach (var booking in bookings)
+        {
+            var vehicle = await _vehicleService.GetByIdAsync(booking.VehicleId);
+            var buyer = await _userManager.FindByIdAsync(booking.BuyerId);
+
+            bookingViewModels.Add(new BookingDetailsViewModel
+            {
+                Booking = booking,
+                Vehicle = vehicle,
+                User = buyer
+            });
+        }
+
+        return View(bookingViewModels);
     }
+    
+    [Authorize(Policy = "RequireSeller")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CompleteTransaction(Guid id)
+    {
+        var booking = await _bookingService.GetByIdAsync(id);
+
+        if (booking == null)
+            return NotFound();
+
+        await _bookingService.DeleteBookingAsync(id);
+
+        return RedirectToAction(nameof(Requests));
+    }
+
+
 }

@@ -57,11 +57,7 @@ public class BookingService : IBookingService
             throw new NotFoundException($"Vehicle with ID {vehicleId} not found");
         }
 
-        // Validate vehicle is available
-        if (vehicle.Status != "Available")
-        {
-            throw new InvalidOperationException($"Cannot create booking for unavailable vehicle");
-        }
+        
 
         // Calculate total amount
         decimal totalAmount = 0;
