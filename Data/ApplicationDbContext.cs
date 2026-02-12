@@ -42,6 +42,21 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             new Offer { Id = Guid.NewGuid(), Type = "Sale", Price = 8000, Status = "rejected", VehicleId = v3.Id, SellerId = seller3.Id },
             new Offer { Id = Guid.NewGuid(), Type = "Rent", Price = 60, Status = "pending", VehicleId = v4.Id, SellerId = seller4.Id }
         );
+
+        // Example Inspectors
+        var inspector1 = new ApplicationUser { Id = "insp1", UserName = "inspector1", Email = "inspector1@projetnet.com", FirstName = "Alice", LastName = "Inspector", EmailConfirmed = true, PhoneNumberConfirmed = true };
+        var inspector2 = new ApplicationUser { Id = "insp2", UserName = "inspector2", Email = "inspector2@projetnet.com", FirstName = "Bob", LastName = "Checker", EmailConfirmed = true, PhoneNumberConfirmed = true };
+        modelBuilder.Entity<ApplicationUser>().HasData(inspector1, inspector2);
+
+        // Example Sales
+        var sale1 = new VehiculeSale { Id = Guid.NewGuid(), OfferId = v1.Id, BuyerId = seller2.Id, Amount = 15000, Status = "completed" };
+        var sale2 = new VehiculeSale { Id = Guid.NewGuid(), OfferId = v3.Id, BuyerId = seller4.Id, Amount = 9000, Status = "completed" };
+        modelBuilder.Entity<VehiculeSale>().HasData(sale1, sale2);
+
+        // Example Bookings
+        var booking1 = new Booking { Id = Guid.NewGuid(), VehicleId = v2.Id, BuyerId = seller1.Id, BookingType = "Rent", StartDate = new DateTime(2026, 2, 1), EndDate = new DateTime(2026, 2, 10), TotalAmount = 1200, Status = "completed" };
+        var booking2 = new Booking { Id = Guid.NewGuid(), VehicleId = v4.Id, BuyerId = seller3.Id, BookingType = "Rent", StartDate = new DateTime(2026, 1, 15), EndDate = new DateTime(2026, 1, 20), TotalAmount = 400, Status = "completed" };
+        modelBuilder.Entity<Booking>().HasData(booking1, booking2);
     }
  
     public DbSet<Vehicle> Vehicles { get; set; } = null!;
