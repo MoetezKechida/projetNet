@@ -4,6 +4,9 @@ using projetNet.Models;
 using projetNet.Data;
 using projetNet.DTOs.Common;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace projetNet.Controllers
 {
@@ -19,6 +22,12 @@ namespace projetNet.Controllers
         // GET: /VehicleListing/
         public IActionResult Index()
         {
+            // If user is logged in and is Admin → redirect to Dashboard
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
             var vehicles = _context.Vehicles.ToList();
             return View(vehicles);
         }

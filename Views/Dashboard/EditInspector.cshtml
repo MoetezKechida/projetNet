@@ -1,0 +1,22 @@
+@model projetNet.Models.ApplicationUser
+@{
+    ViewData["Title"] = "Edit Inspector";
+}
+<h2>Edit Inspector</h2>
+<form asp-action="EditInspector" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>First Name</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Last Name</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-warning">Save Changes</button>
+    <a asp-action="ManageInspectors" class="btn btn-secondary">Cancel</a>
+</form>
