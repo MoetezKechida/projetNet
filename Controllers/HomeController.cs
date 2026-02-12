@@ -16,7 +16,17 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-            return RedirectToAction("Index", "VehicleListing");
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            if (User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Dashboard");
+            if (User.IsInRole("Seller"))
+                return RedirectToAction("UserVehicle", "Vendeur");
+            if (User.IsInRole("Inspector"))
+                return RedirectToAction("Index", "Inspector");
+        }
+        // Buyer or not logged in: show homepage with MyBookings button if Buyer
+        return View();
     }
 
     public IActionResult Privacy()

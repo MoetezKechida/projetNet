@@ -1,4 +1,11 @@
 ﻿@{
+    ViewData["Title"] = "Home";
+}
+<h2>Welcome to the Car Platform</h2>
+@if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Buyer"))
+{
+    <a href="/Booking/MyBookings" class="btn btn-primary">My Bookings</a>
+}@{
     ViewData["Title"] = "Home Page";
 }
 
