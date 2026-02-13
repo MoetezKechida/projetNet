@@ -17,7 +17,6 @@ public class LocalFileImageService : IImageService
         _baseUrl = configuration["AppSettings:BaseUrl"] ?? "http://localhost:5234";
         _logger = logger;
 
-        // Ensure base directory exists
         Directory.CreateDirectory(_basePath);
     }
 
