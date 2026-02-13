@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchBookingRequests, completeTransaction } from "@/lib/api/bookings";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -9,6 +10,8 @@ import Link from "next/link";
 import { formatPrice, formatDate, cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { ArrowLeft, CheckCircle } from "lucide-react";
+import { useSignalR } from "@/hooks/useSignalR";
+import type { BookingNotification } from "@/types";
 
 export default function BookingRequestsPage() {
   const queryClient = useQueryClient();
@@ -17,6 +20,24 @@ export default function BookingRequestsPage() {
     queryKey: ["booking-requests"],
     queryFn: fetchBookingRequests,
   });
+
+  // ── Real-time: listen for new bookings via SignalR ──
+  const signalRHandlers = useMemo(
+    () => ({
+      NewBookingReceived: (notification: BookingNotification) => {
+        // Refresh the booking list so the new entry appears instantly
+        queryClient.invalidateQueries({ queryKey: ["booking-requests"] });
+
+        toast.info("New booking request!", {
+          description: `${notification.buyerName} wants to ${notification.bookingType.toLowerCase()} your ${notification.vehicleModel}`,
+          duration: 6000,
+        });
+      },
+    }),
+    [queryClient]
+  );
+
+  useSignalR("/hubs/booking", signalRHandlers);
 
   const completeMutation = useMutation({
     mutationFn: completeTransaction,
@@ -27,11 +48,14 @@ export default function BookingRequestsPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const handleComplete = (id: string) => {
-    if (confirm("Are you sure you want to complete this transaction?")) {
-      completeMutation.mutate(id);
-    }
-  };
+  const handleComplete = useCallback(
+    (id: string) => {
+      if (confirm("Are you sure you want to complete this transaction?")) {
+        completeMutation.mutate(id);
+      }
+    },
+    [completeMutation]
+  );
 
   return (
     <ProtectedRoute requiredRole="Seller">

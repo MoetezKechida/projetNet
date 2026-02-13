@@ -125,3 +125,16 @@ export interface InspectorUser {
 
 // Brands with models
 export type BrandsWithModels = Record<string, string[]>;
+
+// Real-time SignalR notification from the backend
+export interface BookingNotification {
+  id: string;
+  vehicleId: string;
+  vehicleModel: string;
+  buyerName: string;
+  bookingType: string;
+  startDate: string;
+  endDate: string;
+  totalAmount: number;
+  createdAt: string;
+}

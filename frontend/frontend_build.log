@@ -1,0 +1,22 @@
+
+> frontend@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.1.6 (Turbopack)
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 29.1s
+  Running TypeScript ...
+Failed to compile.
+
+./app/(auth)/auth/register/page.tsx:16:28
+Type error: Cannot find module '@headlessui/react' or its corresponding type declarations.
+
+  14 |
+  15 | // ... imports
+> 16 | import { RadioGroup } from "@headlessui/react"; // Using headlessui or just simple divs if not available. 
+     |                            ^
+  17 | // Actually, let's use standard HTML radio inputs styled with Tailwind for simplicity as I don't see headlessui in package.json
+  18 | // Wait, I should use the existing components/ui if possible. 
+  19 | // I'll stick to standard inputs with Tailwind, similar to other inputs.
+Next.js build worker exited with code: 1 and signal: null
