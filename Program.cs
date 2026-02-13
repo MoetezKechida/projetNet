@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using projetNet.Data;
+using projetNet.Hubs;
 using projetNet.Middleware;
 using projetNet.Models;
 
@@ -20,16 +21,16 @@ using projetNet.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite");
-//if (useSqlite)
-//{
-    //var dbPath = Path.Combine(builder.Environment.ContentRootPath, "app.db");
-    //var sqliteConn = $"Data Source={dbPath}";
-    //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(sqliteConn));
-//}
-//else
-//{
+// //Add services to the container.
+// var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite");
+// if (useSqlite)
+// {
+//     var dbPath = Path.Combine(builder.Environment.ContentRootPath, "app.db");
+//     var sqliteConn = $"Data Source={dbPath}";
+//     builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(sqliteConn));
+// }
+// else
+// {
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
@@ -76,6 +77,21 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
     };
+
+    // Allow SignalR to receive the JWT token from the query string
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs/booking"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 // Configure Authorization Policies
@@ -90,6 +106,7 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 
 // MongoDB Context
 builder.Services.AddSingleton<IMongoContext, MongoContext>();
@@ -119,14 +136,15 @@ builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 // For development, we register a no-op email sender. In production, configure FluentEmail.
 builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, NoOpEmailSender>();
 
-// Add CORS
+// Add CORS (AllowCredentials is required for SignalR WebSocket connections)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.WithOrigins("http://localhost:3000", "https://localhost:3000")
                .AllowAnyMethod()
-               .AllowAnyHeader();
+               .AllowAnyHeader()
+               .AllowCredentials();
     });
 });
 
@@ -180,5 +198,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+app.MapHub<BookingHub>("/hubs/booking");
 
 app.Run();

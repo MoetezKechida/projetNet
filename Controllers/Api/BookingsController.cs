@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using projetNet.DTOs;
 using projetNet.DTOs.Common;
+using projetNet.Hubs;
 using projetNet.Models;
 using projetNet.Services.ServiceContracts;
 using System.Security.Claims;
@@ -16,15 +19,18 @@ public class BookingsController : ControllerBase
     private readonly IBookingService _bookingService;
     private readonly IVehicleService _vehicleService;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IHubContext<BookingHub> _bookingHub;
 
     public BookingsController(
         IBookingService bookingService,
         IVehicleService vehicleService,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        IHubContext<BookingHub> bookingHub)
     {
         _bookingService = bookingService;
         _vehicleService = vehicleService;
         _userManager = userManager;
+        _bookingHub = bookingHub;
     }
 
     [HttpPost]
@@ -35,6 +41,29 @@ public class BookingsController : ControllerBase
 
         var booking = await _bookingService.CreateBookingAsync(
             dto.VehicleId, userId, dto.BookingType, dto.StartDate, dto.EndDate);
+
+        // Look up vehicle + buyer to build the real-time notification
+        var vehicle = await _vehicleService.GetByIdAsync(booking.VehicleId);
+        var buyer = await _userManager.FindByIdAsync(userId);
+
+        if (vehicle != null)
+        {
+            var notification = new BookingNotificationDto
+            {
+                Id = booking.Id,
+                VehicleId = booking.VehicleId,
+                VehicleModel = $"{vehicle.Brand} {vehicle.Model ?? ""}".Trim(),
+                BuyerName = $"{buyer?.FirstName} {buyer?.LastName}".Trim(),
+                BookingType = booking.BookingType,
+                StartDate = booking.StartDate,
+                EndDate = booking.EndDate,
+                TotalAmount = booking.TotalAmount,
+            };
+
+            // Push notification to the vehicle owner (seller) via their personal group
+            await _bookingHub.Clients.Group(vehicle.OwnerId)
+                .SendAsync("NewBookingReceived", notification);
+        }
 
         return Ok(booking);
     }
